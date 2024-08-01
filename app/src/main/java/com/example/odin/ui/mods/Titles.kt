@@ -1,5 +1,6 @@
 package com.example.odin.ui.mods
 
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -26,7 +27,7 @@ fun TitleOdin(text: String) {
                 color = colorScheme.primary,
                 offset = Offset(0.0f, 0.0f),
                 blurRadius = 5f
-            )
+            ),
         ),
         color = colorScheme.secondary
     )
@@ -34,7 +35,7 @@ fun TitleOdin(text: String) {
 
 @Preview
 @Composable
-fun TitleOdinPreview() {
+private fun TitleOdinPreview() {
     OdinTheme {
         TitleOdin("Hello World!!!")
     }

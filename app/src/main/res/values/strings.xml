@@ -4,5 +4,9 @@
     <string name="password">Password</string>
     <string name="login">Login</string>
     <string name="register">Register</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="shared_by">Shared by</string>
+    <string name="Want_help">Want to help?</string>
+    <string name="search">search...</string>
 
 </resources>

@@ -19,6 +19,7 @@ import com.example.odin.ui.mods.ButtonOdin
 import com.example.odin.ui.mods.LogoOverride
 import com.example.odin.ui.mods.TitleOdin
 import com.example.odin.ui.theme.OdinTheme
+import com.example.odin.utils.Routes
 
 @Composable
 fun startScreen(navController: NavController) {
@@ -48,9 +49,10 @@ private fun Screen(navController: NavController) {
     TitleOdin(text = "ODIN")
     Spacer(modifier = Modifier.size(20.dp))
     ButtonOdin(text = "Start", modifier = Modifier.size(200.dp, 50.dp)) {
-        /*
-            Aplicar logica de start
-         */
-        if (it) navController.navigate("Login")
+        if (!it) {
+            navController.navigate(Routes.Login.route)
+        }else{
+            navController.navigate(Routes.Center.route)
+        }
     }
 }
