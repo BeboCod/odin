@@ -16,18 +16,20 @@ import com.example.odin.ui.theme.OdinTheme
 
 @Composable
 fun ButtonOdin(text: String, modifier: Modifier, callback: (Boolean) -> Unit) {
+    // Creación de un botón con sombra personalizada y colores
     Button(
-        onClick = { callback(true) },
+        onClick = { callback(true) }, // Acción a realizar cuando se hace clic en el botón
         modifier = modifier.shadow(
-            elevation = 30.dp,
-            spotColor = colorScheme.primary,
-            ambientColor = colorScheme.primary
+            elevation = 30.dp, // Elevación de la sombra
+            spotColor = colorScheme.primary, // Color principal de la sombra
+            ambientColor = colorScheme.primary // Color ambiental de la sombra
         ),
         colors = buttonColors(
-            contentColor = colorScheme.secondary,
-            containerColor = colorScheme.primary
+            contentColor = colorScheme.secondary, // Color del contenido del botón
+            containerColor = colorScheme.primary // Color del fondo del botón
         ),
     ) {
+        // Texto del botón con estilo personalizado
         Text(text = text, fontWeight = FontWeight.Bold, fontSize = 20.sp)
     }
 }

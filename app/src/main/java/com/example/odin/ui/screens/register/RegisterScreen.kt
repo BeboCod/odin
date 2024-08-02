@@ -25,7 +25,7 @@ import com.example.odin.ui.theme.OdinTheme
 @Composable
 fun RegisterScreen() {
     OdinTheme {
-        Screen()
+        RegisterScreenContent()
     }
 }
 
@@ -36,7 +36,7 @@ private fun RegisterScreenPreview() {
 }
 
 @Composable
-private fun Screen() {
+private fun RegisterScreenContent() {
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
@@ -45,32 +45,47 @@ private fun Screen() {
         verticalArrangement = Arrangement.Center
     ) {
         item {
-            LogoOverride()
-            TitleOdin(text = stringResource(id = R.string.register))
-            Spacer(modifier = Modifier.size(20.dp))
-            TextFieldCustom(
-                value = "",
-                stringResource = R.string.email,
-                keyboardType = KeyboardType.Email,
-                painterResource = R.drawable.baseline_email_24
-            ) {
-
-            }
-            Spacer(modifier = Modifier.size(20.dp))
-            TextFieldPasswordCustom(value = "", stringResource = R.string.password) {
-
-            }
-            Spacer(modifier = Modifier.size(20.dp))
-            TextFieldPasswordCustom(value = "", stringResource = R.string.confirm_password) {
-
-            }
-            Spacer(modifier = Modifier.size(20.dp))
-            ButtonOdin(
-                text = stringResource(id = R.string.register),
-                modifier = Modifier.size(200.dp, 50.dp)
-            ) {
-
-            }
+            RegisterForm()
         }
     }
+}
+
+@Composable
+private fun RegisterForm() {
+    LogoOverride()
+    TitleOdin(text = stringResource(id = R.string.register))
+    Spacer(modifier = Modifier.size(20.dp))
+
+    // Campo para el correo electrónico
+    TextFieldCustom(
+        value = "",
+        placeholderRes = R.string.email,
+        keyboardType = KeyboardType.Email,
+        leadingIconRes = R.drawable.baseline_email_24,
+        onTextFieldChanged = {  }
+    )
+    Spacer(modifier = Modifier.size(20.dp))
+
+    // Campo para la contraseña
+    TextFieldPasswordCustom(
+        value = "",
+        placeholderRes = R.string.password,
+        onTextFieldChanged = {  }
+    )
+    Spacer(modifier = Modifier.size(20.dp))
+
+    // Campo para confirmar la contraseña
+    TextFieldPasswordCustom(
+        value = "",
+        placeholderRes = R.string.confirm_password,
+        onTextFieldChanged = {  }
+    )
+    Spacer(modifier = Modifier.size(20.dp))
+
+    // Botón para registrar
+    ButtonOdin(
+        text = stringResource(id = R.string.register),
+        modifier = Modifier.size(200.dp, 50.dp),
+        callback = {  }
+    )
 }

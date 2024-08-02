@@ -29,18 +29,7 @@ import com.example.odin.utils.Routes
 @Composable
 fun LoginScreen(navController: NavController) {
     OdinTheme {
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(colorScheme.background)
-                .padding(10.dp),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            item {
-                Screen(navController)
-            }
-        }
+        LoginScreenContent(navController)
     }
 }
 
@@ -51,35 +40,55 @@ private fun LoginScreenPreview() {
 }
 
 @Composable
-private fun Screen(navController: NavController) {
-    LogoOverride()
-    TitleOdin(text = stringResource(id = R.string.login))
-    Spacer(modifier = Modifier.size(20.dp))
-    TextFieldCustom(
-        value = "",
-        stringResource = R.string.email,
-        keyboardType = KeyboardType.Email,
-        painterResource = R.drawable.baseline_email_24
+private fun LoginScreenContent(navController: NavController) {
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(colorScheme.background)
+            .padding(10.dp),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-    }
-    Spacer(modifier = Modifier.size(20.dp))
-    TextFieldPasswordCustom(value = "", stringResource = R.string.password) {
-
-    }
-    Spacer(modifier = Modifier.size(20.dp))
-    ButtonOdin(
-        text = stringResource(id = R.string.login),
-        modifier = Modifier.size(200.dp, 50.dp)
-    ) {
-
-    }
-    Spacer(modifier = Modifier.size(20.dp))
-    ButtonOdin(
-        text = stringResource(id = R.string.register),
-        modifier = Modifier.size(200.dp, 50.dp)
-    ) {
-        if (it) {
-            navController.navigate(Routes.Register.route)
+        item {
+            LoginForm(navController)
         }
     }
 }
+
+@Composable
+private fun LoginForm(navController: NavController) {
+    LogoOverride()
+    TitleOdin(text = stringResource(id = R.string.login))
+    Spacer(modifier = Modifier.size(20.dp))
+
+    TextFieldCustom(
+        value = "",
+        placeholderRes = R.string.email,
+        keyboardType = KeyboardType.Email,
+        leadingIconRes = R.drawable.baseline_email_24,
+        onTextFieldChanged = {  }
+    )
+    Spacer(modifier = Modifier.size(20.dp))
+
+    TextFieldPasswordCustom(
+        value = "",
+        placeholderRes = R.string.password,
+        onTextFieldChanged = {  }
+    )
+    Spacer(modifier = Modifier.size(20.dp))
+
+    ButtonOdin(
+        text = stringResource(id = R.string.login),
+        modifier = Modifier.size(200.dp, 50.dp),
+        callback = {  }
+    )
+    Spacer(modifier = Modifier.size(20.dp))
+
+    ButtonOdin(
+        text = stringResource(id = R.string.register),
+        modifier = Modifier.size(200.dp, 50.dp),
+        callback = { navigateToRegister(navController) }
+    )
+}
+
+private fun navigateToRegister(navController: NavController) = navController.navigate(Routes.Register.route)

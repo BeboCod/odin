@@ -1,6 +1,7 @@
 package com.example.odin.ui.mods
 
-import androidx.compose.animation.Crossfade
+import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -9,13 +10,11 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -25,7 +24,6 @@ import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -37,19 +35,19 @@ import com.example.odin.R
 @Composable
 fun TextFieldCustom(
     value: String,
-    stringResource: Int,
+    @StringRes placeholderRes: Int,
     keyboardType: KeyboardType,
     width: Dp = 350.dp,
     height: Dp = 60.dp,
-    painterResource: Int,
-    onTextFieldChaged: (String) -> Unit,
+    @DrawableRes leadingIconRes: Int,
+    onTextFieldChanged: (String) -> Unit,
 ) {
     OutlinedTextField(
         value = value,
-        onValueChange = { onTextFieldChaged(it) },
+        onValueChange = { onTextFieldChanged(it) },
         placeholder = {
             Text(
-                text = stringResource(id = stringResource),
+                text = stringResource(id = placeholderRes),
                 style = TextStyle(
                     fontSize = 14.sp,
                     color = colorScheme.primary,
@@ -61,11 +59,10 @@ fun TextFieldCustom(
                 ),
             )
         },
-        keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
+        keyboardOptions = KeyboardOptions.Default.copy(keyboardType = keyboardType),
         singleLine = true,
         maxLines = 1,
-        modifier = Modifier
-            .size(width = width, height = height),
+        modifier = Modifier.size(width = width, height = height),
         colors = TextFieldDefaults.colors(
             focusedTextColor = colorScheme.primary,
             unfocusedTextColor = colorScheme.secondary,
@@ -82,7 +79,7 @@ fun TextFieldCustom(
         shape = RoundedCornerShape(20.dp),
         leadingIcon = {
             Icon(
-                painter = painterResource(id = painterResource),
+                painter = painterResource(id = leadingIconRes),
                 contentDescription = null,
                 modifier = Modifier.padding(end = 10.dp),
             )
@@ -93,19 +90,23 @@ fun TextFieldCustom(
 @Composable
 fun TextFieldPasswordCustom(
     value: String,
-    stringResource: Int,
+    @StringRes placeholderRes: Int,
     width: Dp = 350.dp,
     height: Dp = 60.dp,
-    onTextFieldChaged: (String) -> Unit,
+    onTextFieldChanged: (String) -> Unit,
 ) {
     val passwordVisibility = remember { mutableStateOf(false) }
-    val icon = remember { mutableIntStateOf(R.drawable.baseline_remove_red_eye_24) }
+    val icon = if (passwordVisibility.value) {
+        R.drawable.baseline_panorama_fish_eye_24
+    } else {
+        R.drawable.baseline_remove_red_eye_24
+    }
     OutlinedTextField(
         value = value,
-        onValueChange = { onTextFieldChaged(it) },
+        onValueChange = { onTextFieldChanged(it) },
         placeholder = {
             Text(
-                text = stringResource(id = stringResource),
+                text = stringResource(id = placeholderRes),
                 style = TextStyle(
                     fontSize = 14.sp,
                     color = colorScheme.primary,
@@ -117,11 +118,10 @@ fun TextFieldPasswordCustom(
                 ),
             )
         },
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+        keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Password),
         singleLine = true,
         maxLines = 1,
-        modifier = Modifier
-            .size(width = width, height = height),
+        modifier = Modifier.size(width = width, height = height),
         colors = TextFieldDefaults.colors(
             focusedTextColor = colorScheme.primary,
             unfocusedTextColor = colorScheme.secondary,
@@ -144,16 +144,9 @@ fun TextFieldPasswordCustom(
             )
         },
         trailingIcon = {
-            IconButton(onClick = {
-                passwordVisibility.value = !passwordVisibility.value
-                icon.intValue = if (passwordVisibility.value) {
-                    R.drawable.baseline_panorama_fish_eye_24
-                } else {
-                    R.drawable.baseline_remove_red_eye_24
-                }
-            }) {
+            IconButton(onClick = { passwordVisibility.value = !passwordVisibility.value }) {
                 Icon(
-                    painter = painterResource(id = icon.intValue),
+                    painter = painterResource(id = icon),
                     contentDescription = null,
                     tint = colorScheme.primary
                 )

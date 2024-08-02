@@ -1,5 +1,6 @@
 package com.example.odin.ui.mods.cardPublication
 
+import androidx.annotation.DrawableRes
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.Spring
@@ -14,6 +15,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -46,6 +48,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.odin.R
@@ -62,18 +65,16 @@ fun CardPublication(
     sharedBy: String = "Override",
     chipTheme: String = "🎓Aprendizaje",
     likes: Int = 69,
-    icon: Int = R.drawable.baseline_verified_24
+    @DrawableRes icon: Int = R.drawable.baseline_verified_24,
+    viewModel: CardPublicationViewModel = CardPublicationViewModel(LocalContext.current),
 ) {
-    val viewModel = CardPublicationViewModel(LocalContext.current)
     Card(
-        onClick = { viewModel.onClickCard() },
+        onClick = viewModel::onClickCard,
         modifier = Modifier
             .fillMaxWidth()
             .height(200.dp),
         shape = shapes.large,
-        colors = cardColors(
-            containerColor = colorScheme.onBackground
-        )
+        colors = cardColors(containerColor = colorScheme.onBackground)
     ) {
         Column(
             modifier =
@@ -82,68 +83,82 @@ fun CardPublication(
                 .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .wrapContentHeight(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Absolute.Left
-            ) {
-                SharedByOdin(text = "${stringResource(id = R.string.shared_by)} $sharedBy", icon = icon)
-                InfoByShared(viewModel)
-            }
-            Column(
+            HeaderRow(sharedBy, icon, viewModel)
+            ContentColumn(
+                title = title,
+                description = description,
                 modifier = Modifier
                     .weight(1f)
-                    .fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
-            ) {
-                TitleCardOdin(text = title)
-                DescriptionOdin(text = description)
-            }
-            Row(
-                modifier = Modifier
                     .fillMaxWidth()
-                    .wrapContentHeight(),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Like(likes, viewModel)
-                ChipTheme(chipTheme, viewModel)
-            }
+            )
+            FooterRow(likes, chipTheme, viewModel)
         }
     }
 }
 
 @Composable
-@Preview(showBackground = true)
-private fun CardPublicationPreview() {
-    OdinTheme {
-        CardPublication(
-            "Programacion Orientada a Objetos (POO)",
-            "Logica de POO explicada con minecraft",
-            "Override",
-            "🎓Aprendizaje",
-            800,
-            R.drawable.baseline_person_24
+private fun HeaderRow(
+    sharedBy: String,
+    @DrawableRes icon: Int,
+    viewModel: CardPublicationViewModel,
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .wrapContentHeight(),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        SharedByOdin(
+            text = "${stringResource(id = R.string.shared_by)} $sharedBy",
+            icon = icon,
+            viewModel = viewModel
         )
+        Spacer(Modifier.weight(1f))
+        InfoByShared(viewModel)
     }
 }
 
 @Composable
-private fun Like(likes: Int, viewModel: CardPublicationViewModel) {
-    val isLiked = viewModel.uiState.collectAsState().value.isLiked
+private fun ContentColumn(title: String, description: String, modifier: Modifier) {
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        TitleCardOdin(text = title)
+        DescriptionOdin(text = description)
+    }
+}
 
-    val iconSize by animateDpAsState(
+@Composable
+private fun FooterRow(likes: Int, chipTheme: String, viewModel: CardPublicationViewModel) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .wrapContentHeight(),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Like(likes, viewModel)
+        ChipTheme(chipTheme, viewModel)
+    }
+}
+
+@Composable
+private fun animatedIconSize(isLiked: Boolean): Dp {
+    return animateDpAsState(
         targetValue = if (isLiked) 35.dp else 30.dp,
         animationSpec = spring(
             dampingRatio = Spring.DampingRatioMediumBouncy,
             stiffness = Spring.StiffnessLow
         ),
-        label = ""
-    )
+        label = "Icon Size Animation"
+    ).value
+}
 
-    val infiniteTransition = rememberInfiniteTransition()
+@Composable
+private fun animatedTint(isLiked: Boolean): Color {
+    val infiniteTransition = rememberInfiniteTransition(label = "")
     val colorAnimation by infiniteTransition.animateFloat(
         initialValue = 0f,
         targetValue = 1f,
@@ -153,18 +168,24 @@ private fun Like(likes: Int, viewModel: CardPublicationViewModel) {
         ),
         label = ""
     )
-
     val rainbowColor = Color.hsv(colorAnimation * 360f, 1f, 1f)
-
-    val tint by animateColorAsState(
+    return animateColorAsState(
         targetValue = if (isLiked) Color(0xFFE93323) else Color.LightGray,
         animationSpec = keyframes {
             durationMillis = 500
             if (isLiked) {
                 rainbowColor at 250
             }
-        }
-    )
+        },
+        label = ""
+    ).value
+}
+
+@Composable
+private fun Like(likes: Int, viewModel: CardPublicationViewModel) {
+    val isLiked = viewModel.uiState.collectAsState().value.isLiked
+    val iconSize = animatedIconSize(isLiked)
+    val tint = animatedTint(isLiked)
 
     Box(modifier = Modifier.size(40.dp), contentAlignment = Alignment.Center) {
         BadgedBox(
@@ -194,19 +215,21 @@ private fun Like(likes: Int, viewModel: CardPublicationViewModel) {
 }
 
 @Composable
-private fun SharedByOdin(text: String, icon: Int) {
-    TextButton(onClick = { }) {
+private fun SharedByOdin(text: String, @DrawableRes icon: Int, viewModel: CardPublicationViewModel) {
+    TextButton(onClick = {
+        viewModel.onClickProfile()
+    }) {
         Text(
             text = text,
-            fontStyle = FontStyle.Normal,
-            textAlign = TextAlign.Center,
             modifier = Modifier.widthIn(max = 300.dp),
             overflow = TextOverflow.Ellipsis,
             maxLines = 1,
             style = TextStyle(
+                fontStyle = FontStyle.Normal,
+                textAlign = TextAlign.Center,
                 fontSize = 17.sp,
-            ),
-            color = colorScheme.secondary
+                color = colorScheme.secondary
+            )
         )
     }
     Icon(
@@ -218,11 +241,12 @@ private fun SharedByOdin(text: String, icon: Int) {
 
 @Composable
 private fun InfoByShared(viewModel: CardPublicationViewModel) {
+    val isSheetOpen = viewModel.uiState.collectAsState().value
     Row(
         modifier = Modifier
             .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Absolute.Right
+        horizontalArrangement = Arrangement.End
     ) {
         IconButton(onClick = {
             viewModel.onClickInfo(true)
@@ -234,13 +258,27 @@ private fun InfoByShared(viewModel: CardPublicationViewModel) {
             )
         }
     }
-    if (viewModel.uiState.collectAsState().value.isSheetOpen) {
+    if (isSheetOpen.isSheetOpen) {
         ShowInfoPost(
             callback = { isClose ->
                 viewModel.onClickInfo(isClose)
             },
-            chip = {
-            }
+            chip = { viewModel.onClickChip() },
+        )
+    }
+}
+
+@Composable
+@Preview(showBackground = true)
+private fun CardPublicationPreview() {
+    OdinTheme {
+        CardPublication(
+            "Programacion Orientada a Objetos (POO)",
+            "Logica de POO explicada con minecraft",
+            "Override",
+            "🎓Aprendizaje",
+            800,
+            R.drawable.baseline_person_24
         )
     }
 }

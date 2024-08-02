@@ -22,37 +22,43 @@ import com.example.odin.ui.theme.OdinTheme
 import com.example.odin.utils.Routes
 
 @Composable
-fun startScreen(navController: NavController) {
+fun StartScreen(navController: NavController) {
     OdinTheme {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(colorScheme.background)
-                .padding(10.dp),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Screen(navController)
-        }
+        StartScreenContent(navController)
     }
 }
 
 @Composable
 @Preview
 private fun StartScreenPreview() {
-    startScreen(rememberNavController())
+    StartScreen(rememberNavController())
 }
 
 @Composable
-private fun Screen(navController: NavController) {
+private fun StartScreenContent(navController: NavController) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(colorScheme.background)
+            .padding(10.dp),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ){
+        StartContent(navController)
+    }
+}
+
+@Composable
+private fun StartContent(navController: NavController) {
     LogoOverride()
     TitleOdin(text = "ODIN")
     Spacer(modifier = Modifier.size(20.dp))
-    ButtonOdin(text = "Start", modifier = Modifier.size(200.dp, 50.dp)) {
-        if (!it) {
-            navController.navigate(Routes.Login.route)
-        }else{
-            navController.navigate(Routes.Center.route)
+    ButtonOdin(
+        text = "Start",
+        modifier = Modifier.size(200.dp, 50.dp),
+        callback = { navigateToRoute ->
+            val route = if (!navigateToRoute) Routes.Login.route else Routes.Center.route
+            navController.navigate(route)
         }
-    }
+    )
 }

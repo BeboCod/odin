@@ -1,4 +1,6 @@
 package com.example.odin.ui.screens.start
 
-class StartViewModel {
+import androidx.lifecycle.ViewModel
+
+class StartViewModel : ViewModel() {
 }

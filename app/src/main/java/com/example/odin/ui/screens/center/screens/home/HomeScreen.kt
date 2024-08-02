@@ -1,9 +1,10 @@
 package com.example.odin.ui.screens.center.screens.home
 
+import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -13,8 +14,6 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.InputChip
-import androidx.compose.material3.InputChipDefaults
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -31,7 +30,6 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.odin.R
-import com.example.odin.ui.mods.cardPublication.CardPublication
 import com.example.odin.ui.theme.OdinTheme
 
 @Composable
@@ -52,6 +50,7 @@ private fun Screen() {
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .padding(16.dp)
     ) {
         Row(
             horizontalArrangement = Arrangement.Center,
@@ -59,12 +58,11 @@ private fun Screen() {
             modifier = Modifier.fillMaxWidth()
         ) {
             TextFieldShared(
-                "",
-                R.string.search,
-                painterResource = R.drawable.baseline_search_24
-            ) {
-
-            }
+                value= "",
+                stringResource = R.string.search,
+                painterResource = R.drawable.baseline_search_24,
+                onTextFieldChaged = {}
+            )
         }
         LazyRow(
             modifier = Modifier
@@ -72,17 +70,7 @@ private fun Screen() {
                 .fillMaxWidth()
         ) {
             item {
-                InputChip(
-                    selected = true,
-                    onClick = {
-                    },
-                    label = { Text(text = "🎓Aprendizaje") },
-                    colors = InputChipDefaults.inputChipColors(
-                        containerColor = colorScheme.primary,
-                        labelColor = colorScheme.secondary,
-                        leadingIconColor = colorScheme.secondary
-                    )
-                )
+
             }
         }
         LazyColumn(
@@ -91,20 +79,7 @@ private fun Screen() {
                 .fillMaxSize()
         ) {
             item {
-                CardPublication()
-                Spacer(modifier = Modifier.size(10.dp))
-                CardPublication()
-                Spacer(modifier = Modifier.size(10.dp))
-                CardPublication()
-                Spacer(modifier = Modifier.size(10.dp))
-                CardPublication()
-                Spacer(modifier = Modifier.size(10.dp))
-                CardPublication()
-                Spacer(modifier = Modifier.size(10.dp))
-                CardPublication()
-                Spacer(modifier = Modifier.size(10.dp))
-                CardPublication()
-                Spacer(modifier = Modifier.size(10.dp))
+
             }
         }
     }
@@ -114,10 +89,10 @@ private fun Screen() {
 @Composable
 private fun TextFieldShared(
     value: String,
-    stringResource: Int,
+    @StringRes stringResource: Int,
     width: Dp = 350.dp,
     height: Dp = 60.dp,
-    painterResource: Int,
+    @DrawableRes painterResource: Int,
     onTextFieldChaged: (String) -> Unit,
 ) {
     OutlinedTextField(
@@ -134,8 +109,7 @@ private fun TextFieldShared(
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
         singleLine = true,
         maxLines = 1,
-        modifier = Modifier
-            .size(width = width, height = height),
+        modifier = Modifier.size(width = width, height = height),
         colors = TextFieldDefaults.outlinedTextFieldColors(
             focusedTextColor = colorScheme.primary,
             unfocusedTextColor = colorScheme.secondary,

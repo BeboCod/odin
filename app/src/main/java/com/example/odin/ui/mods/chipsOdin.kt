@@ -23,42 +23,49 @@ import com.example.odin.ui.mods.cardPublication.CardPublicationViewModel
 
 @Composable
 fun ChipTheme(title: String, viewModel: CardPublicationViewModel) {
+    // Fila que contiene los InputChips
     Row(
         modifier = Modifier
-            .fillMaxWidth()
-            .wrapContentHeight(),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Absolute.Right
+            .fillMaxWidth() // Ocupa todo el ancho disponible
+            .wrapContentHeight(), // Ajusta la altura al contenido
+        verticalAlignment = Alignment.CenterVertically, // Centra verticalmente los elementos
+        horizontalArrangement = Arrangement.Absolute.Right // Alinea los elementos a la derecha
     ) {
+        // Primer InputChip para comentarios
         InputChip(
-            selected = false,
-            onClick = {
-                viewModel.onClickComment()
+            selected = false, // No seleccionado por defecto
+            onClick = { viewModel.onClickComment() }, // Acción al hacer clic
+            label = {
+                Text(
+                    text = stringResource(id = R.string.Want_help), // Texto del chip
+                    fontSize = 13.sp // Tamaño de fuente
+                )
             },
-            label = { Text(text = stringResource(id = R.string.Want_help), fontSize = 13.sp) },
             leadingIcon = {
                 Icon(
-                    painter = painterResource(id = R.drawable.baseline_mode_comment_24),
-                    contentDescription = null
+                    painter = painterResource(id = R.drawable.baseline_mode_comment_24), // Icono del chip
+                    contentDescription = null // Descripción del contenido
                 )
             },
             colors = InputChipDefaults.inputChipColors(
-                containerColor = colorScheme.background,
-                labelColor = colorScheme.secondary,
-                leadingIconColor = colorScheme.secondary,
+                containerColor = colorScheme.background, // Color de fondo del chip
+                labelColor = colorScheme.secondary, // Color del texto del chip
+                leadingIconColor = colorScheme.secondary // Color del icono del chip
             )
         )
+
+        // Espacio entre los chips
         Spacer(modifier = Modifier.size(10.dp))
+
+        // Segundo InputChip para el tema
         InputChip(
-            selected = true,
-            onClick = {
-                viewModel.onClickChip()
-            },
-            label = { DescriptionOdin(text = title) },
+            selected = true, // Seleccionado por defecto
+            onClick = { viewModel.onClickChip() }, // Acción al hacer clic
+            label = { DescriptionOdin(text = title) }, // Descripción del chip
             colors = InputChipDefaults.inputChipColors(
-                containerColor = colorScheme.primary,
-                labelColor = colorScheme.secondary,
-                leadingIconColor = colorScheme.secondary
+                containerColor = colorScheme.primary, // Color de fondo del chip
+                labelColor = colorScheme.secondary, // Color del texto del chip
+                leadingIconColor = colorScheme.secondary // Color del icono del chip
             )
         )
     }
@@ -70,7 +77,7 @@ fun ChipTheme(title: String) {
         selected = true,
         onClick = {
         },
-        label = { Text(text = "$title") },
+        label = { Text(text = title) },
         colors = InputChipDefaults.inputChipColors(
             containerColor = colorScheme.primary,
             labelColor = colorScheme.secondary,

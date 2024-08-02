@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 
-class CardPublicationViewModel(val context: Context) : CardPublicationInterface, ViewModel() {
+class CardPublicationViewModel(private val context: Context) : CardPublicationInterface, ViewModel() {
 
     data class UiState(
         val isLiked: Boolean = false,

@@ -16,10 +16,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.odin.ui.screens.center.CenterScreen
-import com.example.odin.ui.screens.center.screens.home.HomeScreen
 import com.example.odin.ui.screens.login.LoginScreen
 import com.example.odin.ui.screens.register.RegisterScreen
-import com.example.odin.ui.screens.start.startScreen
+import com.example.odin.ui.screens.start.StartScreen
 import com.example.odin.ui.theme.OdinTheme
 import com.example.odin.utils.Routes
 
@@ -49,7 +48,7 @@ class MainActivity : ComponentActivity() {
                     }
                 ) {
                     composable(Routes.Start.route) {
-                        startScreen(navController)
+                        StartScreen(navController)
                     }
                     composable(Routes.Login.route) {
                         LoginScreen(navController)
