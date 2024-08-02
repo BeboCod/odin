@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -28,8 +27,6 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults.cardColors
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.InputChip
-import androidx.compose.material3.InputChipDefaults
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.MaterialTheme.shapes
 import androidx.compose.material3.Text
@@ -37,12 +34,10 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -54,6 +49,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.odin.R
+import com.example.odin.ui.mods.ChipTheme
+import com.example.odin.ui.mods.DescriptionOdin
+import com.example.odin.ui.mods.ShowInfoPost
+import com.example.odin.ui.mods.TitleCardOdin
 import com.example.odin.ui.theme.OdinTheme
 
 @Composable
@@ -63,8 +62,9 @@ fun CardPublication(
     sharedBy: String = "Override",
     chipTheme: String = "🎓Aprendizaje",
     likes: Int = 69,
+    icon: Int = R.drawable.baseline_verified_24
 ) {
-    val viewModel = CardPublicationViewModel()
+    val viewModel = CardPublicationViewModel(LocalContext.current)
     Card(
         onClick = { viewModel.onClickCard() },
         modifier = Modifier
@@ -89,7 +89,7 @@ fun CardPublication(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Absolute.Left
             ) {
-                SharedByOdin(text = "${stringResource(id = R.string.shared_by)} $sharedBy")
+                SharedByOdin(text = "${stringResource(id = R.string.shared_by)} $sharedBy", icon = icon)
                 InfoByShared(viewModel)
             }
             Column(
@@ -124,7 +124,8 @@ private fun CardPublicationPreview() {
             "Logica de POO explicada con minecraft",
             "Override",
             "🎓Aprendizaje",
-            800
+            800,
+            R.drawable.baseline_person_24
         )
     }
 }
@@ -144,7 +145,7 @@ private fun Like(likes: Int, viewModel: CardPublicationViewModel) {
 
     val infiniteTransition = rememberInfiniteTransition()
     val colorAnimation by infiniteTransition.animateFloat(
-        initialValue =0f,
+        initialValue = 0f,
         targetValue = 1f,
         animationSpec = infiniteRepeatable(
             animation = tween(durationMillis = 4000),
@@ -193,40 +194,7 @@ private fun Like(likes: Int, viewModel: CardPublicationViewModel) {
 }
 
 @Composable
-private fun TitleCardOdin(text: String) {
-    Text(
-        text = text,
-        fontWeight = FontWeight.Bold,
-        fontStyle = FontStyle.Normal,
-        textAlign = TextAlign.Center,
-        modifier = Modifier.widthIn(max = 400.dp),
-        overflow = TextOverflow.Ellipsis,
-        maxLines = 1,
-        style = TextStyle(
-            fontSize = 20.sp,
-        ),
-        color = colorScheme.secondary
-    )
-}
-
-@Composable
-private fun DescriptionOdin(text: String) {
-    Text(
-        text = text,
-        fontStyle = FontStyle.Normal,
-        textAlign = TextAlign.Center,
-        modifier = Modifier.widthIn(max = 400.dp),
-        overflow = TextOverflow.Ellipsis,
-        maxLines = 1,
-        style = TextStyle(
-            fontSize = 16.sp,
-        ),
-        color = colorScheme.secondary
-    )
-}
-
-@Composable
-private fun SharedByOdin(text: String) {
+private fun SharedByOdin(text: String, icon: Int) {
     TextButton(onClick = { }) {
         Text(
             text = text,
@@ -242,7 +210,7 @@ private fun SharedByOdin(text: String) {
         )
     }
     Icon(
-        painter = painterResource(id = R.drawable.baseline_verified_24),
+        painter = painterResource(id = icon),
         contentDescription = null,
         tint = Color(0xFF75FAFC)
     )
@@ -257,7 +225,7 @@ private fun InfoByShared(viewModel: CardPublicationViewModel) {
         horizontalArrangement = Arrangement.Absolute.Right
     ) {
         IconButton(onClick = {
-            viewModel.onClickInfo()
+            viewModel.onClickInfo(true)
         }) {
             Icon(
                 painter = painterResource(id = R.drawable.baseline_info_24),
@@ -265,57 +233,14 @@ private fun InfoByShared(viewModel: CardPublicationViewModel) {
                 tint = colorScheme.secondary
             )
         }
-        IconButton(onClick = {
-            viewModel.onClickShare()
-        }) {
-            Icon(
-                painter = painterResource(id = R.drawable.baseline_share_24),
-                contentDescription = null,
-                tint = colorScheme.secondary
-            )
-        }
     }
-}
-
-@Composable
-private fun ChipTheme(title: String, viewModel: CardPublicationViewModel) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .wrapContentHeight(),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Absolute.Right
-    ) {
-        InputChip(
-            selected = false,
-            onClick = {
-                viewModel.onClickComment()
+    if (viewModel.uiState.collectAsState().value.isSheetOpen) {
+        ShowInfoPost(
+            callback = { isClose ->
+                viewModel.onClickInfo(isClose)
             },
-            label = { Text(text = stringResource(id = R.string.Want_help), fontSize = 13.sp) },
-            leadingIcon = {
-                Icon(
-                    painter = painterResource(id = R.drawable.baseline_mode_comment_24),
-                    contentDescription = null
-                )
-            },
-            colors = InputChipDefaults.inputChipColors(
-                containerColor = colorScheme.background,
-                labelColor = colorScheme.secondary,
-                leadingIconColor = colorScheme.secondary,
-            )
-        )
-        Spacer(modifier = Modifier.size(10.dp))
-        InputChip(
-            selected = true,
-            onClick = {
-                viewModel.onClickChip()
-            },
-            label = { DescriptionOdin(text = title) },
-            colors = InputChipDefaults.inputChipColors(
-                containerColor = colorScheme.primary,
-                labelColor = colorScheme.secondary,
-                leadingIconColor = colorScheme.secondary
-            )
+            chip = {
+            }
         )
     }
 }

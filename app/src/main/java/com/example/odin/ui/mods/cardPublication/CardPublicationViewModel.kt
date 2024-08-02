@@ -1,13 +1,21 @@
 package com.example.odin.ui.mods.cardPublication
 
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
+import androidx.lifecycle.ViewModel
+import com.example.odin.utils.Constants
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 
-class CardPublicationViewModel : CardPublicationInterface {
+class CardPublicationViewModel(val context: Context) : CardPublicationInterface, ViewModel() {
 
     data class UiState(
         val isLiked: Boolean = false,
+        val isSheetOpen: Boolean = false,
     )
 
     private val _uiState = MutableStateFlow(UiState())
@@ -25,8 +33,8 @@ class CardPublicationViewModel : CardPublicationInterface {
         TODO("Not yet implemented")
     }
 
-    override fun onClickInfo() {
-        TODO("Not yet implemented")
+    override fun onClickInfo(isBottomSheetOpen: Boolean) {
+        _uiState.value = _uiState.value.copy(isSheetOpen = isBottomSheetOpen)
     }
 
     override fun onClickChip() {
@@ -34,7 +42,8 @@ class CardPublicationViewModel : CardPublicationInterface {
     }
 
     override fun onClickComment() {
-        TODO("Not yet implemented")
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(Constants.DISCORD_URL))
+        context.startActivity(intent)
     }
 
     override fun onClickProfile() {

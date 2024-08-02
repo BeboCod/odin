@@ -68,7 +68,7 @@ private fun Screen() {
         }
         LazyRow(
             modifier = Modifier
-                .padding(horizontal = 5.dp)
+                .padding(horizontal = 25.dp)
                 .fillMaxWidth()
         ) {
             item {
@@ -87,7 +87,7 @@ private fun Screen() {
         }
         LazyColumn(
             modifier = Modifier
-                .padding(horizontal = 5.dp)
+                .padding(horizontal = 15.dp)
                 .fillMaxSize()
         ) {
             item {

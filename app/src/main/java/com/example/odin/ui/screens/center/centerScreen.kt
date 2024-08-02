@@ -1,19 +1,20 @@
 package com.example.odin.ui.screens.center
 
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideIn
+import androidx.compose.animation.slideOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Icon
@@ -23,11 +24,11 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -41,7 +42,6 @@ import com.example.odin.utils.Routes
 fun CenterScreen() {
     val navigationController = rememberNavController()
     val selected = remember { mutableIntStateOf(R.drawable.baseline_home_filled_24) }
-
     Scaffold(
         modifier = Modifier
             .fillMaxSize()
@@ -139,7 +139,21 @@ fun CenterScreen() {
             }
         }
     ) { ing ->
-        NavHost(navController = navigationController, startDestination = Routes.Home.route, modifier = Modifier.padding(ing)) {
+        NavHost(
+            navController = navigationController,
+            startDestination = Routes.Home.route,
+            modifier = Modifier
+                .padding(ing)
+                .background(
+                    colorScheme.background
+                ),
+            enterTransition = {
+                fadeIn(animationSpec = tween(500))
+            },
+            exitTransition = {
+                fadeOut(animationSpec = tween(500))
+            }
+        ) {
             composable(Routes.Home.route) {
                 HomeScreen()
             }

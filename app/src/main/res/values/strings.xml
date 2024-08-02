@@ -8,5 +8,9 @@
     <string name="shared_by">Shared by</string>
     <string name="Want_help">Want to help?</string>
     <string name="search">search...</string>
+    <string name="published_by">Published by</string>
+    <string name="publication_date">Publication date</string>
+    <string name="tags">Tags</string>
+    <string name="post_information">Post information</string>
 
 </resources>

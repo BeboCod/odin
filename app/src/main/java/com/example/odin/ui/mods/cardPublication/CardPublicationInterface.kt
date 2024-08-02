@@ -7,7 +7,7 @@ interface CardPublicationInterface {
 
     fun onClickShare()
 
-    fun onClickInfo()
+    fun onClickInfo(isBottomSheetOpen: Boolean)
 
     fun onClickChip()
 
