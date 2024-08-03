@@ -10,12 +10,13 @@
         android:label="@string/app_name"
         android:roundIcon="@drawable/logo_override"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Odin.Starting"
+        android:theme="@style/Theme.Odin"
+        android:hardwareAccelerated="true"
         tools:targetApi="34">
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:theme="@style/Theme.Odin.Starting">
+            android:theme="@style/Theme.Odin">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

@@ -7,10 +7,18 @@
     <string name="confirm_password">Confirm Password</string>
     <string name="shared_by">Shared by</string>
     <string name="Want_help">Want to help?</string>
-    <string name="search">search...</string>
+    <string name="search">search…</string>
     <string name="published_by">Published by</string>
     <string name="publication_date">Publication date</string>
     <string name="tags">Tags</string>
     <string name="post_information">Post information</string>
-
+    <string name="follow">Follow</string>
+    <string name="publications">Publications</string>
+    <string name="comments">Comments</string>
+    <string name="settings">Settings</string>
+    <string name="follows">follows</string>
+    <string name="account_settings">Account settings</string>
+    <string name="security">Security</string>
+    <string name="support_privacy">support and privacy</string>
+    <string name="logout">Logout</string>
 </resources>

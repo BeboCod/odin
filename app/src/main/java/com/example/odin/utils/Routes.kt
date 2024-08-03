@@ -12,6 +12,6 @@ sealed class Routes(val route: String) {
     data object Register: Routes("Register")
     data object Start: Routes("Start")
     data object Center: Routes("Center")
-    data object Follows: Routes("Follows")
+    data object Community: Routes("Community")
     data object Profile: Routes("Profile")
 }

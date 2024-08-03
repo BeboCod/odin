@@ -33,11 +33,7 @@ import com.example.odin.R
 import com.example.odin.ui.theme.OdinTheme
 
 @Composable
-fun HomeScreen() {
-    OdinTheme {
-        Screen()
-    }
-}
+fun HomeScreen() = OdinTheme { Screen() }
 
 @Composable
 @Preview

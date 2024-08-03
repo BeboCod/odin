@@ -22,11 +22,7 @@ import com.example.odin.ui.theme.OdinTheme
 import com.example.odin.utils.Routes
 
 @Composable
-fun StartScreen(navController: NavController) {
-    OdinTheme {
-        StartScreenContent(navController)
-    }
-}
+fun StartScreen(navController: NavController) = OdinTheme { StartScreenContent(navController) }
 
 @Composable
 @Preview

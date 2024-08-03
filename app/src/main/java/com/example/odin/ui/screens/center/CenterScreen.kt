@@ -2,10 +2,11 @@ package com.example.odin.ui.screens.center
 
 import androidx.annotation.DrawableRes
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideIn
+import androidx.compose.animation.slideOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -15,6 +16,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Icon
@@ -29,6 +34,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
@@ -38,6 +44,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.odin.R
 import com.example.odin.ui.screens.center.screens.home.HomeScreen
 import com.example.odin.ui.screens.center.screens.profile.ProfileScreen
+import com.example.odin.ui.screens.center.screens.tools.ToolsScreen
 import com.example.odin.utils.Routes
 
 @Composable
@@ -64,7 +71,7 @@ private fun CustomBottomAppBar(selected: MutableIntState, navigationController: 
             .clip(RoundedCornerShape(50.dp))
             .background(Color(0xFF272a40))
             .fillMaxWidth()
-            .height(90.dp),
+            .height(100.dp),
         containerColor = Color.Transparent,
         contentColor = Color.Black
     ) {
@@ -89,12 +96,12 @@ private fun CustomBottomAppBar(selected: MutableIntState, navigationController: 
                 }
             )
             BottomAppBarIcon(
-                iconRes = R.drawable.baseline_person_24,
-                isSelected = selected.intValue == R.drawable.baseline_person_24,
+                iconRes = R.drawable.baseline_groups_2_24,
+                isSelected = selected.intValue == R.drawable.baseline_groups_2_24,
                 modifier = modifier,
                 onClick = {
-                    selected.intValue = R.drawable.baseline_person_24
-                    navigationController.navigate(Routes.Follows.route) {
+                    selected.intValue = R.drawable.baseline_groups_2_24
+                    navigationController.navigate(Routes.Community.route) {
                         popUpTo(0)
                     }
                 }
@@ -132,16 +139,24 @@ private fun BottomAppBarIcon(
     modifier: Modifier,
     onClick: () -> Unit,
 ) {
-    IconButton(
-        onClick = onClick,
-        modifier = modifier
+    Box (
+        modifier = Modifier
+            .wrapContentWidth()
+            .wrapContentHeight()
+            .clip(CircleShape)
+            .background(if (isSelected) colorScheme.primary else colorScheme.onBackground)
     ) {
-        Icon(
-            painter = painterResource(id = iconRes),
-            contentDescription = null,
-            modifier = Modifier.size(60.dp),
-            tint = if (isSelected) colorScheme.primary else colorScheme.secondary
-        )
+        IconButton(
+            onClick = onClick,
+            modifier = modifier.padding(5.dp)
+        ) {
+            Icon(
+                painter = painterResource(id = iconRes),
+                contentDescription = null,
+                modifier = Modifier.size(60.dp),
+                tint = if (isSelected) colorScheme.onBackground else colorScheme.secondary
+            )
+        }
     }
 }
 
@@ -154,10 +169,16 @@ private fun NavigationHost(navController: NavHostController, innerPadding: Paddi
             .padding(innerPadding)
             .background(colorScheme.background),
         enterTransition = {
-            fadeIn(animationSpec = tween(500))
+            slideIn(
+                tween(500),
+                initialOffset = { fullSize -> IntOffset(fullSize.width, 0) }
+            )
         },
         exitTransition = {
-            fadeOut(animationSpec = tween(500))
+            slideOut(
+                tween(500),
+                targetOffset = { fullSize -> IntOffset(-fullSize.width, 0) }
+            )
         }
     ) {
         composable(Routes.Home.route) {
@@ -165,6 +186,12 @@ private fun NavigationHost(navController: NavHostController, innerPadding: Paddi
         }
         composable(Routes.Profile.route) {
             ProfileScreen()
+        }
+        composable(Routes.Tools.route) {
+            ToolsScreen()
+        }
+        composable(Routes.Community.route) {
+            HomeScreen()
         }
     }
 }

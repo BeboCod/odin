@@ -23,11 +23,7 @@ import com.example.odin.ui.mods.TitleOdin
 import com.example.odin.ui.theme.OdinTheme
 
 @Composable
-fun RegisterScreen() {
-    OdinTheme {
-        RegisterScreenContent()
-    }
-}
+fun RegisterScreen() = OdinTheme { RegisterScreenContent() }
 
 @Composable
 @Preview

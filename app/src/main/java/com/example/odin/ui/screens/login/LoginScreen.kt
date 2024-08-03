@@ -27,14 +27,13 @@ import com.example.odin.ui.theme.OdinTheme
 import com.example.odin.utils.Routes
 
 @Composable
-fun LoginScreen(navController: NavController) {
-    OdinTheme {
-        LoginScreenContent(navController)
-    }
-}
+fun LoginScreen(navController: NavController) = OdinTheme { LoginScreenContent(navController) }
 
 @Composable
-@Preview
+@Preview(
+    showBackground = true,
+    device = "spec:width=1792px,height=828px,dpi=440,orientation=portrait"
+)
 private fun LoginScreenPreview() {
     LoginScreen(rememberNavController())
 }
