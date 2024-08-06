@@ -28,7 +28,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.ModalBottomSheetDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberModalBottomSheetState
@@ -60,6 +59,7 @@ import com.example.odin.R
 import com.example.odin.ui.mods.ImagesProfile
 import com.example.odin.ui.mods.TitleOdin
 import com.example.odin.ui.theme.OdinTheme
+import com.example.odin.utils.RoutesPublication
 import kotlinx.coroutines.launch
 
 @Composable
@@ -181,9 +181,9 @@ private fun InfoContent(@StringRes stringRes: Int, counter: Int) {
 }
 
 @Composable
-private fun ProfileContent(viewModel: ProfileViewModel = ProfileViewModel()) {
+private fun ProfileContent() {
     val navigationController = rememberNavController()
-    var route = remember { mutableStateOf("Publication") }
+    val route = remember { mutableStateOf("Publication") }
     CustomBottomAppBar(navigationController = navigationController, route)
     NavigationComponent(navController = navigationController)
 }
@@ -208,31 +208,31 @@ private fun CustomBottomAppBar(
         ) {
             item {
                 BottomAppBarIcon(
-                    isSelected = route.value == Routes.Publication.route,
+                    isSelected = route.value == RoutesPublication.Publication.route,
                     stringRes = R.string.publications,
                     onClick = {
-                        route.value = Routes.Publication.route
-                        navigationController.navigate(Routes.Publication.route) {
+                        route.value = RoutesPublication.Publication.route
+                        navigationController.navigate(RoutesPublication.Publication.route) {
                             popUpTo(0)
                         }
                     }
                 )
                 BottomAppBarIcon(
-                    isSelected = route.value == Routes.Comments.route,
+                    isSelected = route.value == RoutesPublication.Comments.route,
                     stringRes = R.string.comments,
                     onClick = {
-                        route.value = Routes.Comments.route
-                        navigationController.navigate(Routes.Comments.route) {
+                        route.value = RoutesPublication.Comments.route
+                        navigationController.navigate(RoutesPublication.Comments.route) {
                             popUpTo(0)
                         }
                     }
                 )
                 BottomAppBarIcon(
-                    isSelected = route.value == Routes.Settings.route,
+                    isSelected = route.value == RoutesPublication.Settings.route,
                     stringRes = R.string.settings,
                     onClick = {
-                        route.value = Routes.Settings.route
-                        navigationController.navigate(Routes.Settings.route) {
+                        route.value = RoutesPublication.Settings.route
+                        navigationController.navigate(RoutesPublication.Settings.route) {
                             popUpTo(0)
                         }
                     }
@@ -253,27 +253,27 @@ private fun NavigationComponent(navController: NavHostController) {
     ) {
         NavHost(
             navController = navController,
-            startDestination = Routes.Publication.route,
+            startDestination = RoutesPublication.Publication.route,
             enterTransition = {
                 slideIn(
                     tween(500),
-                    initialOffset = { fullSize -> IntOffset(fullSize.width, 0) }
+                    initialOffset = { fullSize -> IntOffset(0, fullSize.height) }
                 )
             },
             exitTransition = {
                 slideOut(
                     tween(500),
-                    targetOffset = { fullSize -> IntOffset(-fullSize.width, 0) }
+                    targetOffset = { fullSize -> IntOffset(0, -fullSize.height) }
                 )
             }
         ) {
-            composable(Routes.Publication.route) {
+            composable(RoutesPublication.Publication.route) {
                 ProfilePublicationsScreen()
             }
-            composable(Routes.Comments.route) {
+            composable(RoutesPublication.Comments.route) {
                 ProfileCommentsScreen()
             }
-            composable(Routes.Settings.route) {
+            composable(RoutesPublication.Settings.route) {
                 ProfileSettingsScreen()
             }
         }
@@ -345,7 +345,7 @@ fun ProfileSettingsScreen() {
     val bottomSheetState = rememberModalBottomSheetState()
     val selectedOption = remember { mutableStateOf("") }
 
-    if (bottomSheetState.isVisible){
+    if (bottomSheetState.isVisible) {
         ModalBottomSheet(
             sheetState = bottomSheetState,
             onDismissRequest = { coroutineScope.launch { bottomSheetState.hide() } },

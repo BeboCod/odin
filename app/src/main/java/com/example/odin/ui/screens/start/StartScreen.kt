@@ -11,10 +11,12 @@ import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.example.odin.R
 import com.example.odin.ui.mods.ButtonOdin
 import com.example.odin.ui.mods.LogoOverride
 import com.example.odin.ui.mods.TitleOdin
@@ -47,10 +49,10 @@ private fun StartScreenContent(navController: NavController) {
 @Composable
 private fun StartContent(navController: NavController) {
     LogoOverride()
-    TitleOdin(text = "ODIN")
+    TitleOdin(text = stringResource(id = R.string.app_name))
     Spacer(modifier = Modifier.size(20.dp))
     ButtonOdin(
-        text = "Start",
+        text = stringResource(id = R.string.start),
         modifier = Modifier.size(200.dp, 50.dp),
         callback = { navigateToRoute ->
             val route = if (!navigateToRoute) Routes.Login.route else Routes.Center.route

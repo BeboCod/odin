@@ -14,18 +14,17 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun ImagesProfile(imageUser: Painter) {
+fun ImagesProfile(imageUser: Painter, modifier: Modifier = Modifier) {
     Box(
-        modifier = Modifier
+        modifier = modifier
             .size(100.dp)
             .clip(CircleShape)
-            .background(colorScheme.primary)
-            .padding(15.dp)
+            .background(colorScheme.onBackground)
     ) {
         Image(
             painter = imageUser,
             contentDescription = null,
-            modifier = Modifier
+            modifier = modifier
                 .clip(CircleShape)
                 .size(100.dp)
         )

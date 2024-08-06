@@ -1,11 +1,12 @@
 package com.example.odin.ui.mods
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.material3.Icon
 import androidx.compose.material3.InputChip
 import androidx.compose.material3.InputChipDefaults
@@ -24,50 +25,52 @@ import com.example.odin.ui.mods.cardPublication.CardPublicationViewModel
 @Composable
 fun ChipTheme(title: String, viewModel: CardPublicationViewModel) {
     // Fila que contiene los InputChips
-    Row(
+    LazyRow(
         modifier = Modifier
-            .fillMaxWidth() // Ocupa todo el ancho disponible
+            .wrapContentWidth() // Ocupa todo el ancho disponible
             .wrapContentHeight(), // Ajusta la altura al contenido
         verticalAlignment = Alignment.CenterVertically, // Centra verticalmente los elementos
         horizontalArrangement = Arrangement.Absolute.Right // Alinea los elementos a la derecha
     ) {
-        // Primer InputChip para comentarios
-        InputChip(
-            selected = false, // No seleccionado por defecto
-            onClick = { viewModel.onClickComment() }, // Acción al hacer clic
-            label = {
-                Text(
-                    text = stringResource(id = R.string.Want_help), // Texto del chip
-                    fontSize = 13.sp // Tamaño de fuente
+        item {
+            // Primer InputChip para comentarios
+            InputChip(
+                selected = false, // No seleccionado por defecto
+                onClick = { viewModel.onClickComment() }, // Acción al hacer clic
+                label = {
+                    Text(
+                        text = stringResource(id = R.string.Want_help), // Texto del chip
+                        fontSize = 13.sp // Tamaño de fuente
+                    )
+                },
+                leadingIcon = {
+                    Icon(
+                        painter = painterResource(id = R.drawable.baseline_mode_comment_24), // Icono del chip
+                        contentDescription = null // Descripción del contenido
+                    )
+                },
+                colors = InputChipDefaults.inputChipColors(
+                    containerColor = colorScheme.background, // Color de fondo del chip
+                    labelColor = colorScheme.secondary, // Color del texto del chip
+                    leadingIconColor = colorScheme.secondary // Color del icono del chip
                 )
-            },
-            leadingIcon = {
-                Icon(
-                    painter = painterResource(id = R.drawable.baseline_mode_comment_24), // Icono del chip
-                    contentDescription = null // Descripción del contenido
+            )
+
+            // Espacio entre los chips
+            Spacer(modifier = Modifier.size(10.dp))
+
+            // Segundo InputChip para el tema
+            InputChip(
+                selected = true, // Seleccionado por defecto
+                onClick = { viewModel.onClickChip() }, // Acción al hacer clic
+                label = { DescriptionOdin(text = title) }, // Descripción del chip
+                colors = InputChipDefaults.inputChipColors(
+                    containerColor = colorScheme.primary, // Color de fondo del chip
+                    labelColor = colorScheme.secondary, // Color del texto del chip
+                    leadingIconColor = colorScheme.secondary // Color del icono del chip
                 )
-            },
-            colors = InputChipDefaults.inputChipColors(
-                containerColor = colorScheme.background, // Color de fondo del chip
-                labelColor = colorScheme.secondary, // Color del texto del chip
-                leadingIconColor = colorScheme.secondary // Color del icono del chip
             )
-        )
-
-        // Espacio entre los chips
-        Spacer(modifier = Modifier.size(10.dp))
-
-        // Segundo InputChip para el tema
-        InputChip(
-            selected = true, // Seleccionado por defecto
-            onClick = { viewModel.onClickChip() }, // Acción al hacer clic
-            label = { DescriptionOdin(text = title) }, // Descripción del chip
-            colors = InputChipDefaults.inputChipColors(
-                containerColor = colorScheme.primary, // Color de fondo del chip
-                labelColor = colorScheme.secondary, // Color del texto del chip
-                leadingIconColor = colorScheme.secondary // Color del icono del chip
-            )
-        )
+        }
     }
 }
 

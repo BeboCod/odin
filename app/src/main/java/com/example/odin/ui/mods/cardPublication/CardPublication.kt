@@ -64,12 +64,13 @@ fun CardPublication(
     description: String = "Logica de POO explicada con minecraft",
     sharedBy: String = "Override",
     chipTheme: String = "🎓Aprendizaje",
+    onClickCard: () -> Unit,
     likes: Int = 69,
     @DrawableRes icon: Int = R.drawable.baseline_verified_24,
     viewModel: CardPublicationViewModel = CardPublicationViewModel(LocalContext.current),
 ) {
     Card(
-        onClick = viewModel::onClickCard,
+        onClick = onClickCard,
         modifier = Modifier
             .fillMaxWidth()
             .height(200.dp),
@@ -217,7 +218,7 @@ private fun Like(likes: Int, viewModel: CardPublicationViewModel) {
 @Composable
 private fun SharedByOdin(text: String, @DrawableRes icon: Int, viewModel: CardPublicationViewModel) {
     TextButton(onClick = {
-        viewModel.onClickProfile()
+
     }) {
         Text(
             text = text,
@@ -263,7 +264,8 @@ private fun InfoByShared(viewModel: CardPublicationViewModel) {
             callback = { isClose ->
                 viewModel.onClickInfo(isClose)
             },
-            chip = { viewModel.onClickChip() },
+            chip = {
+            },
         )
     }
 }
@@ -277,8 +279,9 @@ private fun CardPublicationPreview() {
             "Logica de POO explicada con minecraft",
             "Override",
             "🎓Aprendizaje",
-            800,
-            R.drawable.baseline_person_24
+            likes = 800,
+            onClickCard = {},
+            icon = R.drawable.baseline_person_24,
         )
     }
 }

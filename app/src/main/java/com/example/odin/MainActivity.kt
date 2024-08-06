@@ -10,6 +10,8 @@ import androidx.compose.animation.slideOut
 import androidx.compose.foundation.background
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.unit.IntOffset
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.compose.NavHost
@@ -21,6 +23,7 @@ import com.example.odin.ui.screens.register.RegisterScreen
 import com.example.odin.ui.screens.start.StartScreen
 import com.example.odin.ui.theme.OdinTheme
 import com.example.odin.utils.Routes
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,7 +32,12 @@ class MainActivity : ComponentActivity() {
         installSplashScreen()
         setContent {
             OdinTheme {
+                val systemUiController = rememberSystemUiController()
                 val navController = rememberNavController()
+                systemUiController.setSystemBarsColor(
+                    color = Color.Transparent,
+                    darkIcons = false
+                )
                 NavHost(
                     modifier = Modifier.background(colorScheme.background),
                     navController = navController,

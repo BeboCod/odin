@@ -21,4 +21,11 @@
     <string name="security">Security</string>
     <string name="support_privacy">support and privacy</string>
     <string name="logout">Logout</string>
+    <string name="home">Home</string>
+    <string name="tools">Tools</string>
+    <string name="start">Start</string>
+    <string name="center">Center</string>
+    <string name="community">Community</string>
+    <string name="profile">Profile</string>
+    <string name="post">Post</string>
 </resources>

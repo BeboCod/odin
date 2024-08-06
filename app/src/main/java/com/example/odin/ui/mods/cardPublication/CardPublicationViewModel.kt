@@ -22,7 +22,7 @@ class CardPublicationViewModel(private val context: Context) : CardPublicationIn
     val uiState: StateFlow<UiState> = _uiState.asStateFlow()
 
     override fun onClickCard() {
-        TODO("Not yet implemented")
+
     }
 
     override fun onClickLike() {

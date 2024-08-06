@@ -29,24 +29,29 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.odin.R
+import com.example.odin.ui.mods.cardPublication.CardPublication
 import com.example.odin.ui.theme.OdinTheme
+import com.example.odin.utils.Routes
 
 @Composable
-fun HomeScreen() = OdinTheme { Screen() }
+fun HomeScreen(navController: NavController) = OdinTheme { Screen(navController) }
 
 @Composable
-@Preview
+@Preview(device = "spec:width=1334px,height=750px,dpi=440,orientation=portrait")
 private fun HomeScreenPreview() {
-    HomeScreen()
+    HomeScreen(rememberNavController())
 }
 
 @Composable
-private fun Screen() {
+private fun Screen(navController: NavController) {
     Column(
         modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
+            .fillMaxSize(),
+        verticalArrangement = Arrangement.Top,
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Row(
             horizontalArrangement = Arrangement.Center,
@@ -62,11 +67,9 @@ private fun Screen() {
         }
         LazyRow(
             modifier = Modifier
-                .padding(horizontal = 25.dp)
                 .fillMaxWidth()
         ) {
             item {
-
             }
         }
         LazyColumn(
@@ -75,7 +78,16 @@ private fun Screen() {
                 .fillMaxSize()
         ) {
             item {
-
+                CardPublication(
+                    title = "Programacion Orientada a Objetos (POO)",
+                    description = "Logica de POO explicada con minecraft",
+                    sharedBy = "Override",
+                    chipTheme = "🎓Aprendizaje",
+                    likes = 69,
+                    onClickCard = {
+                        navController.navigate(Routes.Post.route)
+                    }
+                )
             }
         }
     }

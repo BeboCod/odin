@@ -2,10 +2,6 @@
 <resources>
     <style name="Theme.Odin" parent="android:Theme.Material.Light.NoActionBar">
         <item name="android:windowActionBar">false</item>
-    </style>
-    <style name="Theme.Odin.Starting" parent="Theme.SplashScreen">
-        <item name="windowSplashScreenBackground">@color/backgroundColor</item>
-        <item name="windowSplashScreenAnimatedIcon">@drawable/logo_override</item>
-        <item name="postSplashScreenTheme">@style/Theme.Odin</item>
+        <item name="android:windowLightStatusBar">true</item>
     </style>
 </resources>

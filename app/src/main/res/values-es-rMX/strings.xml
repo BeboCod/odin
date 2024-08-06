@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">odin</string>
+    <string name="email">Correo electrónico</string>
+    <string name="password">Contraseña</string>
+    <string name="login">Iniciar sesión</string>
+    <string name="register">Registrarse</string>
+    <string name="confirm_password">Confirmar contraseña</string>
+    <string name="shared_by">Compartido por</string>
+    <string name="Want_help">¿Quieres ayudar?</string>
+    <string name="search">buscar…</string>
+    <string name="published_by">Publicado por</string>
+    <string name="publication_date">Fecha de publicación</string>
+    <string name="tags">Etiquetas</string>
+    <string name="post_information">Información del post</string>
+    <string name="follow">Seguir</string>
+    <string name="publications">Publicaciones</string>
+    <string name="comments">Comentarios</string>
+    <string name="settings">Configuraciones</string>
+    <string name="follows">seguidores</string>
+    <string name="account_settings">Configuración de la cuenta</string>
+    <string name="security">Seguridad</string>
+    <string name="support_privacy">soporte y privacidad</string>
+    <string name="logout">Cerrar sesión</string>
+    <string name="home">Inicio</string>
+    <string name="tools">Herramientas</string>
+    <string name="start">Comenzar</string>
+    <string name="center">Centro</string>
+    <string name="community">Comunidad</string>
+    <string name="profile">Perfil</string>
+</resources>

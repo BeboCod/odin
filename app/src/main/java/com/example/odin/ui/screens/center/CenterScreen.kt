@@ -17,15 +17,18 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableIntState
 import androidx.compose.runtime.mutableIntStateOf
@@ -34,8 +37,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -43,20 +49,42 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.odin.R
 import com.example.odin.ui.screens.center.screens.home.HomeScreen
+import com.example.odin.ui.screens.center.screens.post.PostScreen
 import com.example.odin.ui.screens.center.screens.profile.ProfileScreen
 import com.example.odin.ui.screens.center.screens.tools.ToolsScreen
 import com.example.odin.utils.Routes
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CenterScreen() {
     val navigationController = rememberNavController()
     val selected = remember { mutableIntStateOf(R.drawable.baseline_home_filled_24) }
+    val selectedRoute = remember { mutableIntStateOf(Routes.Home.stringRes) }
     Scaffold(
         modifier = Modifier
             .fillMaxSize()
             .background(colorScheme.background),
         bottomBar = {
-            CustomBottomAppBar(selected, navigationController)
+            CustomBottomAppBar(selected, navigationController, selectedRoute)
+        },
+        topBar = {
+            TopAppBar(
+                title = {
+                    Text(
+                        text = stringResource(id = selectedRoute.intValue),
+                        style = TextStyle(
+                            color = colorScheme.secondary,
+                            fontSize = 30.sp
+                        )
+                    )
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .wrapContentHeight(),
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = Color.Transparent
+                )
+            )
         }
     ) { ing ->
         NavigationHost(navigationController, ing)
@@ -64,14 +92,18 @@ fun CenterScreen() {
 }
 
 @Composable
-private fun CustomBottomAppBar(selected: MutableIntState, navigationController: NavController) {
+private fun CustomBottomAppBar(
+    selected: MutableIntState,
+    navigationController: NavController,
+    selectedRoute: MutableIntState,
+) {
     BottomAppBar(
         modifier = Modifier
             .offset(y = (-16).dp)
             .clip(RoundedCornerShape(50.dp))
             .background(Color(0xFF272a40))
             .fillMaxWidth()
-            .height(100.dp),
+            .wrapContentHeight(),
         containerColor = Color.Transparent,
         contentColor = Color.Black
     ) {
@@ -90,6 +122,7 @@ private fun CustomBottomAppBar(selected: MutableIntState, navigationController: 
                 modifier = modifier,
                 onClick = {
                     selected.intValue = R.drawable.baseline_architecture_24
+                    selectedRoute.intValue = Routes.Tools.stringRes
                     navigationController.navigate(Routes.Tools.route) {
                         popUpTo(0)
                     }
@@ -101,6 +134,7 @@ private fun CustomBottomAppBar(selected: MutableIntState, navigationController: 
                 modifier = modifier,
                 onClick = {
                     selected.intValue = R.drawable.baseline_groups_2_24
+                    selectedRoute.intValue = Routes.Community.stringRes
                     navigationController.navigate(Routes.Community.route) {
                         popUpTo(0)
                     }
@@ -112,6 +146,7 @@ private fun CustomBottomAppBar(selected: MutableIntState, navigationController: 
                 modifier = modifier,
                 onClick = {
                     selected.intValue = R.drawable.baseline_home_filled_24
+                    selectedRoute.intValue = Routes.Home.stringRes
                     navigationController.navigate(Routes.Home.route) {
                         popUpTo(0)
                     }
@@ -123,6 +158,7 @@ private fun CustomBottomAppBar(selected: MutableIntState, navigationController: 
                 modifier = modifier,
                 onClick = {
                     selected.intValue = R.drawable.baseline_account_circle_24
+                    selectedRoute.intValue = Routes.Profile.stringRes
                     navigationController.navigate(Routes.Profile.route) {
                         popUpTo(0)
                     }
@@ -139,7 +175,7 @@ private fun BottomAppBarIcon(
     modifier: Modifier,
     onClick: () -> Unit,
 ) {
-    Box (
+    Box(
         modifier = Modifier
             .wrapContentWidth()
             .wrapContentHeight()
@@ -182,7 +218,7 @@ private fun NavigationHost(navController: NavHostController, innerPadding: Paddi
         }
     ) {
         composable(Routes.Home.route) {
-            HomeScreen()
+            HomeScreen(navController)
         }
         composable(Routes.Profile.route) {
             ProfileScreen()
@@ -191,7 +227,10 @@ private fun NavigationHost(navController: NavHostController, innerPadding: Paddi
             ToolsScreen()
         }
         composable(Routes.Community.route) {
-            HomeScreen()
+            HomeScreen(navController)
+        }
+        composable(Routes.Post.route) {
+            PostScreen(navController = navController)
         }
     }
 }
