@@ -28,4 +28,6 @@
     <string name="community">Community</string>
     <string name="profile">Profile</string>
     <string name="post">Post</string>
+    <string name="failed_login">Failed to login</string>
+    <string name="incorrect_login">It seems that some of the data is incorrect, please try again.</string>
 </resources>

@@ -28,4 +28,8 @@
     <string name="center">Centro</string>
     <string name="community">Comunidad</string>
     <string name="profile">Perfil</string>
+    <string name="post">Publicación</string>
+    <string name="failed_login">Error al iniciar sesion</string>
+    <string name="incorrect_login">"Parece que alguno de los datos son incorrectos vuelve a interntarlo "</string>
+
 </resources>

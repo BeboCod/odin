@@ -21,10 +21,10 @@ import androidx.compose.ui.unit.sp
 import com.example.odin.ui.theme.OdinTheme
 
 @Composable
-fun ButtonOdin(text: String, modifier: Modifier, callback: (Boolean) -> Unit) {
+fun ButtonOdin(text: String, modifier: Modifier, callback: () -> Unit) {
     // Creación de un botón con sombra personalizada y colores
     Button(
-        onClick = { callback(true) }, // Acción a realizar cuando se hace clic en el botón
+        onClick = callback, // Acción a realizar cuando se hace clic en el botón
         modifier = modifier.shadow(
             elevation = 30.dp, // Elevación de la sombra
             spotColor = colorScheme.primary, // Color principal de la sombra

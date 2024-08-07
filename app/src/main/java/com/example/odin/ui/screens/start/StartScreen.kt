@@ -54,8 +54,8 @@ private fun StartContent(navController: NavController) {
     ButtonOdin(
         text = stringResource(id = R.string.start),
         modifier = Modifier.size(200.dp, 50.dp),
-        callback = { navigateToRoute ->
-            val route = if (!navigateToRoute) Routes.Login.route else Routes.Center.route
+        callback = {
+            val route = if (true) Routes.Login.route else Routes.Center.route
             navController.navigate(route)
         }
     )

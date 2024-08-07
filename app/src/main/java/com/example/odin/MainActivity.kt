@@ -24,16 +24,34 @@ import com.example.odin.ui.screens.start.StartScreen
 import com.example.odin.ui.theme.OdinTheme
 import com.example.odin.utils.Routes
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import io.ktor.client.HttpClient
+import io.ktor.client.engine.cio.CIO
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.serialization.kotlinx.json.json
+import kotlinx.serialization.json.Json
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val client = HttpClient(CIO) {
+            followRedirects = false
+            install(ContentNegotiation) {
+                json(Json {
+                    prettyPrint = true
+                    isLenient = true
+                    ignoreUnknownKeys = true
+                })
+            }
+        }
+
         enableEdgeToEdge()
         installSplashScreen()
         setContent {
             OdinTheme {
                 val systemUiController = rememberSystemUiController()
                 val navController = rememberNavController()
+                val context = this
                 systemUiController.setSystemBarsColor(
                     color = Color.Transparent,
                     darkIcons = false
@@ -59,7 +77,7 @@ class MainActivity : ComponentActivity() {
                         StartScreen(navController)
                     }
                     composable(Routes.Login.route) {
-                        LoginScreen(navController)
+                        LoginScreen(navController, context, client)
                     }
                     composable(Routes.Register.route) {
                         RegisterScreen()
