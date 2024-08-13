@@ -1,5 +1,6 @@
 package com.example.odin.ui.screens.start
 
+import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -11,6 +12,7 @@ import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -24,16 +26,18 @@ import com.example.odin.ui.theme.OdinTheme
 import com.example.odin.utils.Routes
 
 @Composable
-fun StartScreen(navController: NavController) = OdinTheme { StartScreenContent(navController) }
+fun StartScreen(navController: NavController, context: Context) =
+    OdinTheme { StartScreenContent(navController, context) }
 
 @Composable
 @Preview
 private fun StartScreenPreview() {
-    StartScreen(rememberNavController())
+    StartScreen(rememberNavController(), LocalContext.current)
 }
 
 @Composable
-private fun StartScreenContent(navController: NavController) {
+private fun StartScreenContent(navController: NavController, context: Context) {
+    val viewModel = StartViewModel(context)
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -41,13 +45,13 @@ private fun StartScreenContent(navController: NavController) {
             .padding(10.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
-    ){
-        StartContent(navController)
+    ) {
+        StartContent(navController, viewModel)
     }
 }
 
 @Composable
-private fun StartContent(navController: NavController) {
+private fun StartContent(navController: NavController, viewModel: StartViewModel) {
     LogoOverride()
     TitleOdin(text = stringResource(id = R.string.app_name))
     Spacer(modifier = Modifier.size(20.dp))
@@ -55,8 +59,10 @@ private fun StartContent(navController: NavController) {
         text = stringResource(id = R.string.start),
         modifier = Modifier.size(200.dp, 50.dp),
         callback = {
-            val route = if (true) Routes.Login.route else Routes.Center.route
-            navController.navigate(route)
+            viewModel.dataExists {
+                val route = if (it) Routes.Center.route else Routes.Login.route
+                navController.navigate(route)
+            }
         }
     )
 }

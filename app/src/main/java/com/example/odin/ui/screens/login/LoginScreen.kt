@@ -102,28 +102,28 @@ private fun Content(viewModel: LoginViewModel) {
 @Composable
 private fun Footer(navController: NavController, viewModel: LoginViewModel) {
     val state by viewModel.uiState.collectAsState()
-    if (state.isShowingError ){
+    if (state.isShowingError){
         Show(
             containerColor = colorScheme.error,
             icon = R.drawable.baseline_warning_amber_24,
-            Title = stringResource(
-                id = R.string.failed_login
-            ),
+            Title = stringResource(id = R.string.failed_login),
             MSG = stringResource(id = R.string.incorrect_login)
         ) {
-            viewModel.onShowingError(false)
+            viewModel.onShowingError()
         }
     }
     ButtonOdin(
         text = stringResource(id = R.string.login),
         modifier = Modifier.size(200.dp, 50.dp),
         callback = {
-            val response = viewModel.auth()
-            if (response.isValid) {
-                navController.navigate(Routes.Center.route)
-            } else {
-                viewModel.onShowingError(true)
-                print("${response.data} ${response.errorMessage}")
+            if (viewModel.isNotEmpty()){
+                viewModel.auth{ response ->
+                    if (response.isValid) {
+                        navController.navigate(Routes.Center.route)
+                    } else {
+                        print("${response.data} ${response.errorMessage}")
+                    }
+                }
             }
         }
     )

@@ -1,5 +1,6 @@
 package com.example.odin.ui.screens.center.screens.profile
 
+import android.content.Context
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.animation.core.tween
@@ -32,14 +33,18 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -63,10 +68,11 @@ import com.example.odin.utils.RoutesPublication
 import kotlinx.coroutines.launch
 
 @Composable
-fun ProfileScreen() = OdinTheme { ProfileContentScreen() }
+fun ProfileScreen(context: Context) = OdinTheme { ProfileContentScreen(context) }
 
 @Composable
-private fun ProfileContentScreen() {
+private fun ProfileContentScreen(context: Context) {
+    val viewModel = ProfileViewModel(context)
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -74,13 +80,21 @@ private fun ProfileContentScreen() {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top
     ) {
-        ProfileHeader()
-        ProfileContent()
+        ProfileHeader(viewModel)
+        ProfileContent(viewModel)
     }
 }
 
 @Composable
-private fun ProfileHeader() {
+private fun ProfileHeader(viewModel: ProfileViewModel) {
+    var name by remember { mutableStateOf("") }
+    var verified by remember { mutableStateOf(false) }
+
+    LaunchedEffect(viewModel) {
+        name = viewModel.getName()
+        verified = viewModel.getVerified()
+    }
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -91,13 +105,13 @@ private fun ProfileHeader() {
     ) {
         ImagesProfile(painterResource(id = R.drawable.baseline_account_circle_24))
         Spacer(modifier = Modifier.size(10.dp))
-        UserName(text = "Override")
-        BarInfo()
+        UserName(text = name, icon = if (verified) R.drawable.baseline_verified_24 else R.drawable.baseline_person_24)
+        BarInfo(viewModel)
     }
 }
 
 @Composable
-fun UserName(text: String, @DrawableRes icon: Int = R.drawable.baseline_verified_24) {
+fun UserName(text: String, @DrawableRes icon: Int) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -118,6 +132,7 @@ fun UserName(text: String, @DrawableRes icon: Int = R.drawable.baseline_verified
             ),
             color = colorScheme.secondary
         )
+        Spacer(modifier = Modifier.size(10.dp))
         Icon(
             painter = painterResource(id = icon),
             contentDescription = null,
@@ -127,7 +142,16 @@ fun UserName(text: String, @DrawableRes icon: Int = R.drawable.baseline_verified
 }
 
 @Composable
-private fun BarInfo() {
+private fun BarInfo(viewModel: ProfileViewModel) {
+    var postCount by remember { mutableStateOf(0) }
+    var followersCount by remember { mutableStateOf(0) }
+    var commentsCount by remember { mutableStateOf(0) }
+
+    LaunchedEffect(viewModel) {
+        postCount = viewModel.getPost().size
+        followersCount = viewModel.getFollowers().size
+        commentsCount = viewModel.getComments().size
+    }
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -136,9 +160,9 @@ private fun BarInfo() {
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
-        InfoContent(stringRes = R.string.publications, counter = 212)
-        InfoContent(stringRes = R.string.follows, counter = 423)
-        InfoContent(stringRes = R.string.comments, counter = 137)
+        InfoContent(stringRes = R.string.publications, counter = postCount)
+        InfoContent(stringRes = R.string.follows, counter = followersCount)
+        InfoContent(stringRes = R.string.comments, counter = commentsCount)
     }
 }
 
@@ -181,11 +205,11 @@ private fun InfoContent(@StringRes stringRes: Int, counter: Int) {
 }
 
 @Composable
-private fun ProfileContent() {
+private fun ProfileContent(viewModel: ProfileViewModel) {
     val navigationController = rememberNavController()
     val route = remember { mutableStateOf("Publication") }
     CustomBottomAppBar(navigationController = navigationController, route)
-    NavigationComponent(navController = navigationController)
+    NavigationComponent(navController = navigationController, viewModel)
 }
 
 @Composable
@@ -243,7 +267,7 @@ private fun CustomBottomAppBar(
 }
 
 @Composable
-private fun NavigationComponent(navController: NavHostController) {
+private fun NavigationComponent(navController: NavHostController, viewModel: ProfileViewModel) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -484,6 +508,6 @@ private fun SettingsSupportPrivacyScreen() {
 @Composable
 private fun ProfileScreenPreview() {
     OdinTheme {
-        ProfileScreen()
+        ProfileScreen(LocalContext.current)
     }
 }

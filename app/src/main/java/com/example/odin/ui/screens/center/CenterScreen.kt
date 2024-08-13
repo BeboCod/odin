@@ -1,5 +1,6 @@
 package com.example.odin.ui.screens.center
 
+import android.content.Context
 import androidx.annotation.DrawableRes
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideIn
@@ -56,7 +57,7 @@ import com.example.odin.utils.Routes
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CenterScreen() {
+fun CenterScreen(context: Context) {
     val navigationController = rememberNavController()
     val selected = remember { mutableIntStateOf(R.drawable.baseline_home_filled_24) }
     val selectedRoute = remember { mutableIntStateOf(Routes.Home.stringRes) }
@@ -87,7 +88,7 @@ fun CenterScreen() {
             )
         }
     ) { ing ->
-        NavigationHost(navigationController, ing)
+        NavigationHost(navigationController, ing, context)
     }
 }
 
@@ -197,7 +198,7 @@ private fun BottomAppBarIcon(
 }
 
 @Composable
-private fun NavigationHost(navController: NavHostController, innerPadding: PaddingValues) {
+private fun NavigationHost(navController: NavHostController, innerPadding: PaddingValues, context: Context) {
     NavHost(
         navController = navController,
         startDestination = Routes.Home.route,
@@ -221,7 +222,7 @@ private fun NavigationHost(navController: NavHostController, innerPadding: Paddi
             HomeScreen(navController)
         }
         composable(Routes.Profile.route) {
-            ProfileScreen()
+            ProfileScreen(context)
         }
         composable(Routes.Tools.route) {
             ToolsScreen()

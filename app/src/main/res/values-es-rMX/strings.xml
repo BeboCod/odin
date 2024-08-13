@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">odin</string>
+    <string name="app_name">Odin</string>
     <string name="email">Correo electrónico</string>
     <string name="password">Contraseña</string>
     <string name="login">Iniciar sesión</string>
@@ -17,10 +17,10 @@
     <string name="publications">Publicaciones</string>
     <string name="comments">Comentarios</string>
     <string name="settings">Configuraciones</string>
-    <string name="follows">seguidores</string>
+    <string name="follows">Seguidores</string>
     <string name="account_settings">Configuración de la cuenta</string>
     <string name="security">Seguridad</string>
-    <string name="support_privacy">soporte y privacidad</string>
+    <string name="support_privacy">Soporte y privacidad</string>
     <string name="logout">Cerrar sesión</string>
     <string name="home">Inicio</string>
     <string name="tools">Herramientas</string>
@@ -31,5 +31,8 @@
     <string name="post">Publicación</string>
     <string name="failed_login">Error al iniciar sesion</string>
     <string name="incorrect_login">"Parece que alguno de los datos son incorrectos vuelve a interntarlo "</string>
+    <string name="username">Nombre de usuario</string>
+    <string name="sign_failed">Registro fallido</string>
+    <string name="incorrect_register">"Alguno de los campos es incorrecto verifique los datos y vuelve a intentarlo "</string>
 
 </resources>

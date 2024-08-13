@@ -33,7 +33,6 @@ import kotlinx.serialization.json.Json
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         val client = HttpClient(CIO) {
             followRedirects = false
             install(ContentNegotiation) {
@@ -74,16 +73,16 @@ class MainActivity : ComponentActivity() {
                     }
                 ) {
                     composable(Routes.Start.route) {
-                        StartScreen(navController)
+                        StartScreen(navController, context)
                     }
                     composable(Routes.Login.route) {
                         LoginScreen(navController, context, client)
                     }
                     composable(Routes.Register.route) {
-                        RegisterScreen()
+                        RegisterScreen(context, navController, client)
                     }
                     composable(Routes.Center.route) {
-                        CenterScreen()
+                        CenterScreen(context)
                     }
                 }
             }

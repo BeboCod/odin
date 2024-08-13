@@ -6,16 +6,7 @@ import androidx.datastore.preferences.core.stringSetPreferencesKey
 
 object Constants {
     const val DISCORD_URL = "https://discord.com/"
-    const val HTTPS_ODIN = "http://10.0.2.2:8080/odin/api/v0/"
-    val STRING_KEY = stringPreferencesKey("string_key")
-    val STRING_ID_KEY = stringPreferencesKey("string_id_key")
-    val STRING_NAME_KEY = stringPreferencesKey("string_name_key")
-    val STRING_IMAGE_URL_KEY = stringPreferencesKey("string_image_url_key")
-    val BOOLEAN_VERIFICATION_KEY = booleanPreferencesKey("boolean_verification_key")
-    val LIST_POSTS_KEY = stringSetPreferencesKey("list_posts_key")
-    val LIST_FOLLOWERS_KEY = stringSetPreferencesKey("list_followers_key")
-    val LIST_COMMENTS_KEY = stringSetPreferencesKey("list_comments_key")
-    val LIST_KEY = stringSetPreferencesKey("list_key")
+    const val HTTPS_ODIN = "http://10.0.2.2:8080/odin/api/v0"
     val materias = listOf(
         "Algoritmos y Estructuras de Datos",
         "Programación Orientada a Objetos",
@@ -118,5 +109,4 @@ object Constants {
         "Seminario de Innovación Tecnológica",
         "Diseño y Desarrollo de Aplicaciones Inteligentes"
     )
-
 }
