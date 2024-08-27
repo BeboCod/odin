@@ -53,7 +53,7 @@ private fun ContentScreen(navController: NavController) {
             .fillMaxSize()
             .background(colorScheme.background)
             .padding(horizontal = 10.dp)
-            .padding(bottom = 20.dp),
+            .padding(bottom = 20.dp, top = 10.dp),
     ) {
         val viewModel = PostViewModel()
         val data = viewModel.getData("123")
