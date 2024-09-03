@@ -33,4 +33,15 @@
     <string name="username">Username</string>
     <string name="sign_failed">Sign up failed</string>
     <string name="incorrect_register">Some of the fields are incorrect, check the data and try again.</string>
+    <string name="input">Input</string>
+    <string name="input_custom">Input custom</string>
+    <string name="add">Add</string>
+    <string name="get">Get</string>
+    <string name="clear">Clear</string>
+    <string name="delete">Delete</string>
+    <string name="modifier">Modifier</string>
+    <string name="control_memory">Control Memory</string>
+    <string name="size">Size</string>
+    <string name="info">info</string>
+    <string name="help">Help</string>
 </resources>

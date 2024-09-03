@@ -1,6 +1,7 @@
 package com.example.odin.ui.mods
 
 import androidx.annotation.DrawableRes
+import androidx.annotation.Size
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -24,6 +25,7 @@ import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -153,5 +155,65 @@ fun TextFieldPasswordCustom(
             }
         },
         visualTransformation = if (passwordVisibility.value) VisualTransformation.None else PasswordVisualTransformation()
+    )
+}
+
+@Composable
+fun TextFieldCustomIconButton(
+    value: String,
+    @StringRes placeholderRes: Int,
+    keyboardType: KeyboardType,
+    width: Dp = 350.dp,
+    height: Dp = 60.dp,
+    label: String = "",
+    @DrawableRes leadingIconRes: Int,
+    onTextFieldChanged: (String) -> Unit,
+    onIconButtonClicked: () -> Unit,
+) {
+    OutlinedTextField(
+        value = value,
+        label = { Text(text = label)},
+        onValueChange = { onTextFieldChanged(it) },
+        placeholder = {
+            Text(
+                text = stringResource(id = placeholderRes),
+                style = TextStyle(
+                    fontSize = 14.sp,
+                    color = colorScheme.primary,
+                    shadow = Shadow(
+                        color = colorScheme.secondary,
+                        offset = Offset(0.0f, 0.0f),
+                        blurRadius = 5f
+                    )
+                ),
+            )
+        },
+        keyboardOptions = KeyboardOptions.Default.copy(keyboardType = keyboardType),
+        singleLine = true,
+        maxLines = 1,
+        modifier = Modifier.size(width = width, height = height),
+        colors = TextFieldDefaults.colors(
+            focusedTextColor = colorScheme.primary,
+            unfocusedTextColor = colorScheme.secondary,
+            unfocusedContainerColor = Color.Transparent,
+            focusedContainerColor = Color.Transparent,
+            cursorColor = colorScheme.primary,
+            focusedLeadingIconColor = colorScheme.secondary,
+            unfocusedLeadingIconColor = colorScheme.primary,
+            unfocusedPlaceholderColor = colorScheme.secondary,
+            focusedPlaceholderColor = colorScheme.primary,
+            unfocusedLabelColor = colorScheme.primary,
+            focusedLabelColor = colorScheme.primary
+        ),
+        shape = RoundedCornerShape(20.dp),
+        leadingIcon = {
+            IconButton(onClick = { onIconButtonClicked() }) {
+                Icon(
+                    painter = painterResource(id = leadingIconRes),
+                    contentDescription = null,
+                    modifier = Modifier.padding(end = 10.dp),
+                )
+            }
+        }
     )
 }

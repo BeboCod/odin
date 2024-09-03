@@ -34,5 +34,16 @@
     <string name="username">Nombre de usuario</string>
     <string name="sign_failed">Registro fallido</string>
     <string name="incorrect_register">"Alguno de los campos es incorrecto verifique los datos y vuelve a intentarlo "</string>
+    <string name="input">Entrada</string>
+    <string name="input_custom">Entrada de Modificación</string>
+    <string name="add">Añadir</string>
+    <string name="get">Obtener</string>
+    <string name="clear">Limpiar</string>
+    <string name="delete">Eliminar</string>
+    <string name="modifier">Modificar</string>
+    <string name="control_memory">Control de memoria</string>
+    <string name="size">Tamaño</string>
+    <string name="info">Informacion</string>
+    <string name="help">Ayuda</string>
 
 </resources>

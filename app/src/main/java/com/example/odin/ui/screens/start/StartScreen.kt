@@ -59,10 +59,11 @@ private fun StartContent(navController: NavController, viewModel: StartViewModel
         text = stringResource(id = R.string.start),
         modifier = Modifier.size(200.dp, 50.dp),
         callback = {
-            viewModel.dataExists {
-                val route = if (it) Routes.Center.route else Routes.Login.route
-                navController.navigate(route)
-            }
+//            viewModel.dataExists {
+//                val route = if (it) Routes.Center.route else Routes.Login.route
+//                navController.navigate(route)
+//            }
+            navController.navigate(Routes.Center.route)
         }
     )
 }

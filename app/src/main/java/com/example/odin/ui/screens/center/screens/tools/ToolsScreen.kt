@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.material3.Card
@@ -16,45 +18,46 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
+import com.example.odin.ui.mods.LogoOverride
 import com.example.odin.ui.theme.OdinTheme
 import com.example.odin.utils.Constants
+import com.example.odin.utils.Routes
 
 
 @Composable
-fun ToolsScreen() = OdinTheme { ScreenContent() }
+fun ToolsScreen(navController: NavController) = OdinTheme { ScreenContent(navController) }
 
 @Composable
-private fun ScreenContent() {
-    Column(
+private fun ScreenContent(navController: NavController) {
+    // Usar LazyVerticalGrid en lugar de LazyVerticalStaggeredGrid
+    LazyVerticalGrid(
+        columns = GridCells.Fixed(2), // Ajusta el número de columnas según sea necesario
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
         modifier = Modifier
             .fillMaxSize()
-            .background(colorScheme.background),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Top
+            .padding(horizontal = 20.dp)
+            .padding(top = 20.dp)
+            .background(colorScheme.background)
     ) {
-        LazyVerticalStaggeredGrid(
-            columns = StaggeredGridCells.Fixed(2),
-            verticalItemSpacing = 8.dp,
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 20.dp)
-                .background(colorScheme.background)
-        ) {
-            items(100) {
-                val height = if (it % 2 == 0) 150.dp else 100.dp
-                CardTools(
-                    onClick = { /*TODO*/ },
-                    string = Constants.materias[it],
-                    modifier = Modifier
-                        .height(height)
-                )
-            }
+        items(Constants.toolsIdString.size) {
+            val height = if (it % 2 == 0) 150.dp else 100.dp
+            CardTools(
+                onClick = {
+                    navController.navigate(Routes.ToolsScreen.createRoute(Constants.toolsIdString[it].second))
+                },
+                string = stringResource(id = Constants.toolsIdString[it].first),
+                modifier = Modifier
+                    .height(height)
+            )
         }
     }
 }
@@ -82,7 +85,7 @@ private fun CardTools(
                     color = colorScheme.secondary,
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
-                    )
+                )
             )
         }
     }
@@ -92,4 +95,4 @@ private fun CardTools(
     showBackground = true,
 )
 @Composable
-fun ToolsScreenPreview() = ToolsScreen()
+fun ToolsScreenPreview() = ToolsScreen(rememberNavController())

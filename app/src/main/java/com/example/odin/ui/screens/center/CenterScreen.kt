@@ -45,15 +45,19 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.example.odin.R
 import com.example.odin.ui.screens.center.screens.home.HomeScreen
 import com.example.odin.ui.screens.center.screens.post.PostScreen
 import com.example.odin.ui.screens.center.screens.profile.ProfileScreen
 import com.example.odin.ui.screens.center.screens.tools.ToolsScreen
+import com.example.odin.ui.screens.center.screens.tools.screen.ScreenTools
 import com.example.odin.utils.Routes
+import com.example.odin.utils.RoutesTools
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -198,7 +202,11 @@ private fun BottomAppBarIcon(
 }
 
 @Composable
-private fun NavigationHost(navController: NavHostController, innerPadding: PaddingValues, context: Context) {
+private fun NavigationHost(
+    navController: NavHostController,
+    innerPadding: PaddingValues,
+    context: Context
+) {
     NavHost(
         navController = navController,
         startDestination = Routes.Home.route,
@@ -225,7 +233,24 @@ private fun NavigationHost(navController: NavHostController, innerPadding: Paddi
             ProfileScreen(context)
         }
         composable(Routes.Tools.route) {
-            ToolsScreen()
+            ToolsScreen(navController)
+        }
+        composable(
+            Routes.ToolsScreen.createRoute("{toolName}"),
+            arguments = listOf(navArgument("toolName") {
+                type = NavType.StringType
+            })
+        ) { navBackStackEntry ->
+            val toolName = navBackStackEntry.arguments?.getString("toolName")
+            val tool = RoutesTools.fromName(toolName!!)
+            tool?.let {
+                it.content()
+            } ?: run {
+                Text(text = "Tool not found")
+            }
+        }
+        composable(Routes.Center.route) {
+            CenterScreen(context)
         }
         composable(Routes.Community.route) {
             HomeScreen(navController)

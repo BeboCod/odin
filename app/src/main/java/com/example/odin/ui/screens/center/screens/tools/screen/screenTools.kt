@@ -2,6 +2,7 @@ package com.example.odin.ui.screens.center.screens.tools.screen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -26,24 +27,19 @@ import com.example.odin.ui.screens.center.screens.tools.ToolsViewModel
 import com.example.odin.ui.theme.OdinTheme
 
 @Composable
-fun ScreenTools(data: Array<String>, content: @Composable () -> Unit) = Screen(data, content)
+fun ScreenTools(content: @Composable () -> Unit) = Screen(content)
 
 @Composable
-private fun Screen(data: Array<String>, content: @Composable () -> Unit) {
-    val viewModel = ToolsScreenViewModel(data)
-    val dataViewModel = viewModel.uiState.collectAsState()
+private fun Screen(content: @Composable () -> Unit) {
     OdinTheme {
-        LazyColumn(
+        Column(
             modifier = Modifier
                 .fillMaxSize()
                 .background(colorScheme.background)
                 .padding(horizontal = 10.dp)
                 .padding(bottom = 20.dp, top = 10.dp)
         ) {
-            item {
-                Header(dataViewModel.value.data[0])//Title
-                content()
-            }
+            content()
         }
 
     }
@@ -74,7 +70,7 @@ private fun Header(title: String) {
 
 @Composable
 @Preview
-private fun ScreenTool() = Screen(arrayOf("Sitema de memoria"), content = {ContentPreview()})
+private fun ScreenTool() = Screen(content = { ContentPreview() })
 
 @Composable
 private fun ContentPreview() {

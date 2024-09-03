@@ -1,7 +1,10 @@
 package com.example.odin.utils
 
+import android.content.Context
 import androidx.annotation.StringRes
+import androidx.compose.runtime.Composable
 import com.example.odin.R
+import com.example.odin.ui.screens.center.screens.tools.ToolsOdin.ControlMemory.ScreenControlMemory
 
 /**
  * Definición de rutas de navegación en la aplicación.
@@ -11,7 +14,8 @@ import com.example.odin.R
 sealed class Routes(val route: String, @StringRes val stringRes: Int) {
     data object Login: Routes("Login", R.string.login)
     data object Home: Routes("Home", R.string.home)
-    data object Tools: Routes("Tools/{toolName}", R.string.tools){
+    data object Tools: Routes("Tools", R.string.tools)
+    data object ToolsScreen: Routes("Tools/{toolName}", R.string.tools){
         fun createRoute(toolName: String) = "Tools/$toolName"
     }
     data object Register: Routes("Register", R.string.register)
@@ -29,4 +33,16 @@ sealed class RoutesPublication(val route: String, stringRes: Int) {
     data object Publication: Routes("Publication", R.string.publications)
     data object Comments: Routes("Comments", R.string.comments)
     data object Settings: Routes("Settings", R.string.settings)
+}
+
+sealed class RoutesTools(val content: @Composable () -> Unit, val route: String){
+    data object ControlMemory: RoutesTools({ ScreenControlMemory() }, "Control_Memory")
+    companion object {
+        val allTools = listOf(ControlMemory)
+
+        // Función para obtener una herramienta por nombre
+        fun fromName(name: String): RoutesTools? {
+            return allTools.find { it.route == name }
+        }
+    }
 }
