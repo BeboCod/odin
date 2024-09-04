@@ -1,10 +1,9 @@
 package com.example.odin.utils
 
-import android.content.Context
 import androidx.annotation.StringRes
 import androidx.compose.runtime.Composable
 import com.example.odin.R
-import com.example.odin.ui.screens.center.screens.tools.ToolsOdin.ControlMemory.ScreenControlMemory
+import com.example.odin.ui.screens.center.screens.tools.tools_odin.control_memory.ScreenControlMemory
 
 /**
  * Definición de rutas de navegación en la aplicación.

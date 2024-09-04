@@ -55,7 +55,6 @@ import com.example.odin.ui.screens.center.screens.home.HomeScreen
 import com.example.odin.ui.screens.center.screens.post.PostScreen
 import com.example.odin.ui.screens.center.screens.profile.ProfileScreen
 import com.example.odin.ui.screens.center.screens.tools.ToolsScreen
-import com.example.odin.ui.screens.center.screens.tools.screen.ScreenTools
 import com.example.odin.utils.Routes
 import com.example.odin.utils.RoutesTools
 

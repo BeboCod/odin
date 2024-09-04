@@ -1,5 +1,6 @@
 package com.example.odin.ui.screens.login
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.widget.Toast
 import androidx.datastore.preferences.core.edit
@@ -8,13 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.odin.data.model.request.AuthenticateRequest
 import com.example.odin.data.model.response.AuthenticateResponse
 import com.example.odin.data.model.response.ValidationResponse
-import com.example.odin.preference.PREFERENCE_LIST_KEY.LIST_COMMENTS_KEY
-import com.example.odin.preference.PREFERENCE_LIST_KEY.LIST_FOLLOWERS_KEY
-import com.example.odin.preference.PREFERENCE_LIST_KEY.LIST_POSTS_KEY
-import com.example.odin.preference.PREFERENCE_STRING_KEY.BOOLEAN_VERIFICATION_KEY
-import com.example.odin.preference.PREFERENCE_STRING_KEY.STRING_ID_KEY
-import com.example.odin.preference.PREFERENCE_STRING_KEY.STRING_IMAGE_URL_KEY
-import com.example.odin.preference.PREFERENCE_STRING_KEY.STRING_NAME_KEY
+import com.example.odin.preference.KeysPreference
 import com.example.odin.utils.Constants
 import com.example.odin.utils.dataStore
 import com.google.firebase.auth.FirebaseAuth
@@ -31,8 +26,25 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class LoginViewModel(private val client: HttpClient, private val context: Context) : ViewModel(),
-    LoginInterface {
+/**
+ * ViewModel para la gestión de la pantalla de inicio de sesión.
+ *
+ * @param client Instancia del cliente HTTP para realizar las solicitudes.
+ * @param context Contexto de la aplicación.
+ */
+@SuppressLint("StaticFieldLeak")
+class LoginViewModel(
+    private val client: HttpClient,
+    private val context: Context
+) : ViewModel(), LoginInterface {
+
+    /**
+     * Estado de la UI del ViewModel.
+     *
+     * @property email Dirección de correo electrónico ingresada por el usuario.
+     * @property password Contraseña ingresada por el usuario.
+     * @property isShowingError Indica si se debe mostrar un mensaje de error.
+     */
     data class UiState(
         val email: String = "",
         val password: String = "",
@@ -42,27 +54,61 @@ class LoginViewModel(private val client: HttpClient, private val context: Contex
     private val _uiState = MutableStateFlow(UiState())
     val uiState = _uiState.asStateFlow()
 
+    /**
+     * Actualiza el estado del correo electrónico.
+     *
+     * @param email La nueva dirección de correo electrónico.
+     */
     override fun onEmailChanged(email: String) {
         _uiState.update { it.copy(email = email) }
     }
 
+    /**
+     * Actualiza el estado de la contraseña.
+     *
+     * @param password La nueva contraseña.
+     */
     override fun onPasswordChanged(password: String) {
         _uiState.update { it.copy(password = password) }
     }
 
+    /**
+     * Oculta el mensaje de error si está mostrando uno.
+     */
     fun onShowingError() {
         _uiState.update { it.copy(isShowingError = false) }
     }
 
+    /**
+     * Verifica si los campos de email y contraseña no están vacíos.
+     *
+     * @return `true` si ambos campos están llenos, `false` en caso contrario.
+     */
     fun isNotEmpty(): Boolean =
         uiState.value.email.isNotEmpty() && uiState.value.password.isNotEmpty()
 
-
+    /**
+     * Valida la dirección de correo electrónico.
+     *
+     * @param email La dirección de correo electrónico a validar.
+     * @return `true` si el email es válido, `false` en caso contrario.
+     */
     override fun validateEmail(email: String): Boolean =
         email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$".toRegex())
 
+    /**
+     * Valida la contraseña.
+     *
+     * @param password La contraseña a validar.
+     * @return `true` si la contraseña tiene al menos 6 caracteres, `false` en caso contrario.
+     */
     override fun validatePassword(password: String): Boolean = password.length >= 6
 
+    /**
+     * Realiza la validación de los campos de email y contraseña.
+     *
+     * @return `true` si ambos campos son válidos, `false` en caso contrario.
+     */
     private fun validate(): Boolean {
         val email = uiState.value.email.lowercase()
         val password = uiState.value.password.lowercase()
@@ -79,9 +125,15 @@ class LoginViewModel(private val client: HttpClient, private val context: Contex
         return true
     }
 
+    /**
+     * Realiza la autenticación del usuario mediante Firebase y el backend de la aplicación.
+     *
+     * @param callback Función de retorno de llamada que recibe un objeto `ValidationResponse`
+     *                 indicando el resultado de la autenticación.
+     */
     override fun auth(callback: (ValidationResponse) -> Unit) {
         val auth = FirebaseAuth.getInstance()
-        if (validate())
+        if (validate()) {
             auth.signInWithEmailAndPassword(uiState.value.email, uiState.value.password)
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
@@ -104,21 +156,21 @@ class LoginViewModel(private val client: HttpClient, private val context: Contex
                                             val authenticateResponse =
                                                 response.body<AuthenticateResponse>()
                                             context.dataStore.edit { preferences ->
-                                                preferences[STRING_ID_KEY.keys] =
+                                                preferences[KeysPreference.PreferenceStringKey.STRING_ID_KEY.key] =
                                                     authenticateResponse.id
-                                                preferences[STRING_NAME_KEY.keys] =
+                                                preferences[KeysPreference.PreferenceStringKey.STRING_NAME_KEY.key] =
                                                     authenticateResponse.name
-                                                preferences[STRING_IMAGE_URL_KEY.keys] =
+                                                preferences[KeysPreference.PreferenceStringKey.STRING_IMAGE_URL_KEY.key] =
                                                     authenticateResponse.imageUrl
-                                                preferences[BOOLEAN_VERIFICATION_KEY.keys] =
+                                                preferences[KeysPreference.PreferenceStringKey.BOOLEAN_VERIFICATION_KEY.key] =
                                                     authenticateResponse.verification.toString()
-                                                preferences[LIST_POSTS_KEY.keys] =
+                                                preferences[KeysPreference.PreferenceListKey.LIST_POSTS_KEY.key] =
                                                     authenticateResponse.posts?.toSet()
                                                         ?: emptySet()
-                                                preferences[LIST_FOLLOWERS_KEY.keys] =
+                                                preferences[KeysPreference.PreferenceListKey.LIST_FOLLOWERS_KEY.key] =
                                                     authenticateResponse.followers?.toSet()
                                                         ?: emptySet()
-                                                preferences[LIST_COMMENTS_KEY.keys] =
+                                                preferences[KeysPreference.PreferenceListKey.LIST_COMMENTS_KEY.key] =
                                                     authenticateResponse.comments?.toSet()
                                                         ?: emptySet()
                                             }
@@ -175,7 +227,7 @@ class LoginViewModel(private val client: HttpClient, private val context: Contex
                         )
                     }
                 }
-        else {
+        } else {
             _uiState.update { it.copy(isShowingError = true) }
             callback(
                 ValidationResponse(

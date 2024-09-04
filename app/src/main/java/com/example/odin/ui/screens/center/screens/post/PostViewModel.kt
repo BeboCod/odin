@@ -1,8 +1,8 @@
 package com.example.odin.ui.screens.center.screens.post
 
 import androidx.lifecycle.ViewModel
-import com.example.odin.data.service.Post
-import com.example.odin.data.service.User
+import com.example.odin.model.Post
+import com.example.odin.model.User
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow

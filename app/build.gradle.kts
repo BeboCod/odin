@@ -8,7 +8,7 @@ plugins {
 
 android {
     namespace = "com.example.odin"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.example.odin"

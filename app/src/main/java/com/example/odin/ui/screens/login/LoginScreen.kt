@@ -1,5 +1,6 @@
 package com.example.odin.ui.screens.login
 
+import Show
 import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -24,7 +25,6 @@ import androidx.navigation.compose.rememberNavController
 import com.example.odin.R
 import com.example.odin.ui.mods.ButtonOdin
 import com.example.odin.ui.mods.LogoOverride
-import com.example.odin.ui.mods.Show
 import com.example.odin.ui.mods.TextFieldCustom
 import com.example.odin.ui.mods.TextFieldPasswordCustom
 import com.example.odin.ui.mods.TitleOdin
@@ -106,8 +106,8 @@ private fun Footer(navController: NavController, viewModel: LoginViewModel) {
         Show(
             containerColor = colorScheme.error,
             icon = R.drawable.baseline_warning_amber_24,
-            Title = stringResource(id = R.string.failed_login),
-            MSG = stringResource(id = R.string.incorrect_login)
+            title = stringResource(id = R.string.failed_login),
+            msg = stringResource(id = R.string.incorrect_login)
         ) {
             viewModel.onShowingError()
         }

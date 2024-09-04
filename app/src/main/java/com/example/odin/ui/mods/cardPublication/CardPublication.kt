@@ -11,31 +11,10 @@ import androidx.compose.animation.core.keyframes
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.widthIn
-import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.material3.Badge
-import androidx.compose.material3.BadgedBox
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults.cardColors
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
 import androidx.compose.material3.MaterialTheme.colorScheme
-import androidx.compose.material3.MaterialTheme.shapes
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -58,6 +37,18 @@ import com.example.odin.ui.mods.ShowInfoPost
 import com.example.odin.ui.mods.TitleCardOdin
 import com.example.odin.ui.theme.OdinTheme
 
+/**
+ * Composable que representa una tarjeta de publicación en la interfaz de usuario.
+ *
+ * @param title El título de la publicación.
+ * @param description La descripción de la publicación.
+ * @param sharedBy El nombre de quien compartió la publicación.
+ * @param chipTheme El tema del chip asociado a la publicación.
+ * @param onClickCard Función que se llama cuando se hace clic en la tarjeta.
+ * @param likes El número de "me gusta" en la publicación.
+ * @param icon Recurso drawable del icono asociado a la publicación.
+ * @param viewModel ViewModel asociado a la tarjeta de publicación.
+ */
 @Composable
 fun CardPublication(
     title: String = "Programacion Orientada a Objetos (POO)",
@@ -74,12 +65,11 @@ fun CardPublication(
         modifier = Modifier
             .fillMaxWidth()
             .height(200.dp),
-        shape = shapes.large,
-        colors = cardColors(containerColor = colorScheme.onBackground)
+        shape = Shapes().large,
+        colors = CardDefaults.cardColors(containerColor = colorScheme.onBackground)
     ) {
         Column(
-            modifier =
-            Modifier
+            modifier = Modifier
                 .padding(10.dp)
                 .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally
@@ -97,6 +87,13 @@ fun CardPublication(
     }
 }
 
+/**
+ * Composable que representa la fila superior de la tarjeta con la información de quién compartió la publicación y el botón de información.
+ *
+ * @param sharedBy El nombre de quien compartió la publicación.
+ * @param icon Recurso drawable del icono asociado a la publicación.
+ * @param viewModel ViewModel asociado a la tarjeta de publicación.
+ */
 @Composable
 private fun HeaderRow(
     sharedBy: String,
@@ -111,14 +108,20 @@ private fun HeaderRow(
     ) {
         SharedByOdin(
             text = "${stringResource(id = R.string.shared_by)} $sharedBy",
-            icon = icon,
-            viewModel = viewModel
+            icon = icon
         )
         Spacer(Modifier.weight(1f))
         InfoByShared(viewModel)
     }
 }
 
+/**
+ * Composable que representa la columna central de la tarjeta con el título y la descripción de la publicación.
+ *
+ * @param title El título de la publicación.
+ * @param description La descripción de la publicación.
+ * @param modifier Modificador para ajustar el tamaño y disposición de la columna.
+ */
 @Composable
 private fun ContentColumn(title: String, description: String, modifier: Modifier) {
     Column(
@@ -131,6 +134,13 @@ private fun ContentColumn(title: String, description: String, modifier: Modifier
     }
 }
 
+/**
+ * Composable que representa la fila inferior de la tarjeta con los "me gusta" y el chip asociado.
+ *
+ * @param likes El número de "me gusta" en la publicación.
+ * @param chipTheme El tema del chip asociado a la publicación.
+ * @param viewModel ViewModel asociado a la tarjeta de publicación.
+ */
 @Composable
 private fun FooterRow(likes: Int, chipTheme: String, viewModel: CardPublicationViewModel) {
     Row(
@@ -145,6 +155,12 @@ private fun FooterRow(likes: Int, chipTheme: String, viewModel: CardPublicationV
     }
 }
 
+/**
+ * Composable que define el tamaño animado del ícono de "me gusta" en función de si está marcado como "me gusta".
+ *
+ * @param isLiked Booleano que indica si el ícono está marcado como "me gusta".
+ * @return Tamaño del ícono animado.
+ */
 @Composable
 private fun animatedIconSize(isLiked: Boolean): Dp {
     return animateDpAsState(
@@ -157,9 +173,15 @@ private fun animatedIconSize(isLiked: Boolean): Dp {
     ).value
 }
 
+/**
+ * Composable que define el color animado del ícono de "me gusta" en función de si está marcado como "me gusta".
+ *
+ * @param isLiked Booleano que indica si el ícono está marcado como "me gusta".
+ * @return Color animado del ícono.
+ */
 @Composable
 private fun animatedTint(isLiked: Boolean): Color {
-    val infiniteTransition = rememberInfiniteTransition(label = "")
+    val infiniteTransition = rememberInfiniteTransition(label = "Color Transition")
     val colorAnimation by infiniteTransition.animateFloat(
         initialValue = 0f,
         targetValue = 1f,
@@ -167,7 +189,7 @@ private fun animatedTint(isLiked: Boolean): Color {
             animation = tween(durationMillis = 4000),
             repeatMode = RepeatMode.Reverse
         ),
-        label = ""
+        label = "Color Animation"
     )
     val rainbowColor = Color.hsv(colorAnimation * 360f, 1f, 1f)
     return animateColorAsState(
@@ -178,15 +200,21 @@ private fun animatedTint(isLiked: Boolean): Color {
                 rainbowColor at 250
             }
         },
-        label = ""
+        label = "Tint Animation"
     ).value
 }
 
+/**
+ * Composable que representa el ícono de "me gusta" con la animación de tamaño y color.
+ *
+ * @param likes El número de "me gusta" en la publicación.
+ * @param viewModel ViewModel asociado a la tarjeta de publicación.
+ */
 @Composable
 private fun Like(likes: Int, viewModel: CardPublicationViewModel) {
-    val isLiked = viewModel.uiState.collectAsState().value.isLiked
-    val iconSize = animatedIconSize(isLiked)
-    val tint = animatedTint(isLiked)
+    val isLiked by viewModel.uiState.collectAsState()
+    val iconSize = animatedIconSize(isLiked.isLiked)
+    val tint = animatedTint(isLiked.isLiked)
 
     Box(modifier = Modifier.size(40.dp), contentAlignment = Alignment.Center) {
         BadgedBox(
@@ -205,7 +233,7 @@ private fun Like(likes: Int, viewModel: CardPublicationViewModel) {
                 }
             ) {
                 Icon(
-                    painter = painterResource(id = if (isLiked) R.drawable.baseline_favorite_24 else R.drawable.baseline_favorite_border_24),
+                    painter = painterResource(id = if (isLiked.isLiked) R.drawable.baseline_favorite_24 else R.drawable.baseline_favorite_border_24),
                     contentDescription = null,
                     tint = tint,
                     modifier = Modifier.size(iconSize)
@@ -215,10 +243,16 @@ private fun Like(likes: Int, viewModel: CardPublicationViewModel) {
     }
 }
 
+/**
+ * Composable que muestra quién compartió la publicación y el ícono asociado.
+ *
+ * @param text Texto que muestra quién compartió la publicación.
+ * @param icon Recurso drawable del icono asociado a la publicación.
+ */
 @Composable
-private fun SharedByOdin(text: String, @DrawableRes icon: Int, viewModel: CardPublicationViewModel) {
+private fun SharedByOdin(text: String, @DrawableRes icon: Int) {
     TextButton(onClick = {
-
+        // Acción del botón de texto
     }) {
         Text(
             text = text,
@@ -240,9 +274,14 @@ private fun SharedByOdin(text: String, @DrawableRes icon: Int, viewModel: CardPu
     )
 }
 
+/**
+ * Composable que muestra el botón de información en la fila superior de la tarjeta.
+ *
+ * @param viewModel ViewModel asociado a la tarjeta de publicación.
+ */
 @Composable
 private fun InfoByShared(viewModel: CardPublicationViewModel) {
-    val isSheetOpen = viewModel.uiState.collectAsState().value
+    val isSheetOpen by viewModel.uiState.collectAsState()
     Row(
         modifier = Modifier
             .fillMaxWidth(),
@@ -261,27 +300,8 @@ private fun InfoByShared(viewModel: CardPublicationViewModel) {
     }
     if (isSheetOpen.isSheetOpen) {
         ShowInfoPost(
-            callback = { isClose ->
-                viewModel.onClickInfo(isClose)
-            },
-            chip = {
-            },
-        )
-    }
-}
-
-@Composable
-@Preview(showBackground = true)
-private fun CardPublicationPreview() {
-    OdinTheme {
-        CardPublication(
-            "Programacion Orientada a Objetos (POO)",
-            "Logica de POO explicada con minecraft",
-            "Override",
-            "🎓Aprendizaje",
-            likes = 800,
-            onClickCard = {},
-            icon = R.drawable.baseline_person_24,
+            callback = { viewModel.onClickInfo(it) },
+            chip = {},
         )
     }
 }

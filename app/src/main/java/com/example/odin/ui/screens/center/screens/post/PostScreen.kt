@@ -2,24 +2,18 @@ package com.example.odin.ui.screens.center.screens.post
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.horizontalScroll
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -37,7 +31,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.odin.R
-import com.example.odin.data.service.User
+import com.example.odin.model.User
 import com.example.odin.ui.mods.ImagesProfile
 import com.example.odin.ui.mods.UserNameOdin
 import com.example.odin.ui.theme.OdinTheme
@@ -48,22 +42,22 @@ fun PostScreen(navController: NavController) = OdinTheme { ContentScreen(navCont
 
 @Composable
 private fun ContentScreen(navController: NavController) {
+    val viewModel = remember { PostViewModel() }
+    val data = viewModel.getData("123")
+
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
             .background(colorScheme.background)
-            .padding(horizontal = 10.dp)
-            .padding(bottom = 20.dp, top = 10.dp),
+            .padding(horizontal = 10.dp, vertical = 10.dp)
     ) {
-        val viewModel = PostViewModel()
-        val data = viewModel.getData("123")
         item {
             Header(
                 user = data.user,
                 verified = data.user.verified,
                 navController = navController
             )
-            Spacer(modifier = Modifier.padding(10.dp))
+            Spacer(modifier = Modifier.height(10.dp))
             Content(
                 title = data.title,
                 description = data.description,
@@ -71,6 +65,7 @@ private fun ContentScreen(navController: NavController) {
                 code = data.code,
                 conclusion = data.conclusion
             )
+            Spacer(modifier = Modifier.height(10.dp))
             Footer(
                 socialMedia = listOf(SocialMedia("X", "x.com", 0)),
                 collaborators = data.collaborators
@@ -83,19 +78,18 @@ private fun ContentScreen(navController: NavController) {
 private fun Header(
     user: User,
     verified: Boolean,
-    navController: NavController,
+    navController: NavController
 ) {
     val icon = if (verified) R.drawable.baseline_verified_24 else R.drawable.baseline_person_24
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .wrapContentHeight(),
+            .padding(vertical = 10.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Start
     ) {
-        IconButton(onClick = {
-            navController.popBackStack()
-        }) {
+        IconButton(onClick = { navController.popBackStack() }) {
             Icon(
                 painter = painterResource(id = R.drawable.baseline_arrow_back_ios_24),
                 contentDescription = null,
@@ -106,10 +100,10 @@ private fun Header(
         ImagesProfile(
             imageUser = painterResource(id = R.drawable.ic_launcher_background),
             modifier = Modifier.size(50.dp)
-        )//Remplazar por imageUser
-        Spacer(modifier = Modifier.padding(5.dp))
+        )
+        Spacer(modifier = Modifier.width(10.dp))
         UserNameOdin(text = user.userName)
-        Spacer(modifier = Modifier.padding(5.dp))
+        Spacer(modifier = Modifier.width(10.dp))
         Icon(
             painter = painterResource(id = icon),
             contentDescription = null,
@@ -120,16 +114,16 @@ private fun Header(
 
 @Composable
 private fun Content(
-    description: String,
-    urlVideo: String,//Agregar logica de video
-    code: String,
-    conclusion: String,
     title: String,
+    description: String,
+    urlVideo: String,
+    code: String,
+    conclusion: String
 ) {
     Column(
         modifier = Modifier
-            .wrapContentHeight()
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -142,35 +136,31 @@ private fun Content(
                 fontWeight = FontWeight.Bold
             )
         )
-        Spacer(modifier = Modifier.padding(10.dp))
+        Spacer(modifier = Modifier.height(10.dp))
         Text(
             text = description,
             style = TextStyle(
                 color = colorScheme.secondary,
                 fontSize = 15.sp,
-                textAlign = TextAlign.Start,
-                fontWeight = FontWeight.Normal
+                textAlign = TextAlign.Start
             )
         )
-        //Agregar logica de video
+        Spacer(modifier = Modifier.height(10.dp))
         Card(
             modifier = Modifier
                 .fillMaxWidth()
                 .wrapContentHeight()
                 .padding(16.dp),
-            colors = CardDefaults.cardColors(
-                containerColor = Color(0xFF272a40)
-            )
+            colors = CardDefaults.cardColors(containerColor = Color(0xFF272a40))
         ) {
-            Row (
+            Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .wrapContentHeight()
                     .horizontalScroll(rememberScrollState()),
-                horizontalArrangement = Arrangement.Start,
+                horizontalArrangement = Arrangement.Start
             ) {
                 Text(
-                    text = formatCode(code, Color(0xFF4F91E0), colorScheme.error, Color.Red),
+                    text = formatCode(code),
                     color = colorScheme.secondary,
                     fontFamily = FontFamily.Monospace,
                     fontWeight = FontWeight.SemiBold,
@@ -182,14 +172,13 @@ private fun Content(
                 )
             }
         }
-        Spacer(modifier = Modifier.padding(10.dp))
+        Spacer(modifier = Modifier.height(10.dp))
         Text(
             text = conclusion,
             style = TextStyle(
                 color = colorScheme.secondary,
                 fontSize = 15.sp,
-                textAlign = TextAlign.Start,
-                fontWeight = FontWeight.Normal
+                textAlign = TextAlign.Start
             )
         )
     }
@@ -198,35 +187,34 @@ private fun Content(
 @Composable
 private fun Footer(
     socialMedia: List<SocialMedia>,
-    collaborators: List<User>,
+    collaborators: List<User>
 ) {
     Column(
         modifier = Modifier
-            .wrapContentHeight()
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-
+        // Implement Footer content here
     }
 }
 
+@Composable
 fun formatCode(
     code: String,
-    keywordColor: Color,
-    numberColor: Color,
-    commentColor: Color,
+    keywordColor: Color = Color(0xFF4F91E0),
+    numberColor: Color = colorScheme.error,
+    commentColor: Color = Color.Red
 ): AnnotatedString {
-    val keywords =
-        listOf("fun", "val", "var", "if", "else", "for", "while", "when", "return", "import", "class")
+    val keywords = listOf("fun", "val", "var", "if", "else", "for", "while", "when", "return", "import", "class")
     val commentRegex = Regex("//.*")
     val numberRegex = Regex("\\b\\d+\\b")
 
     return buildAnnotatedString {
         code.split("\n").forEach { line ->
             val lineStart = this.length
-
-            append(line + "\n") // Append the line and a newline character
+            append(line + "\n")
 
             if (commentRegex.containsMatchIn(line)) {
                 val commentStart = line.indexOf("//")
@@ -264,7 +252,6 @@ fun formatCode(
         }
     }
 }
-
 
 @Composable
 @Preview

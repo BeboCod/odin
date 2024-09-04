@@ -28,6 +28,14 @@ import androidx.compose.ui.window.Dialog
 import com.example.odin.R
 import com.example.odin.ui.theme.OdinTheme
 
+/**
+ * Composable que muestra un diálogo con información sobre una publicación.
+ *
+ * @param publishedBy Nombre del autor de la publicación.
+ * @param date Fecha de publicación.
+ * @param chip Composable para mostrar chips o etiquetas.
+ * @param callback Función para manejar el cierre del diálogo.
+ */
 @Composable
 fun ShowInfoPost(
     publishedBy: String = "Override",
@@ -36,29 +44,22 @@ fun ShowInfoPost(
     callback: (Boolean) -> Unit,
 ) {
     Dialog(
-        onDismissRequest = {
-            callback(false)
-        },
+        onDismissRequest = { callback(false) }
     ) {
         Card(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(200.dp),
             shape = shapes.large,
-            colors = cardColors(
-                containerColor = colorScheme.onBackground
-            )
+            colors = cardColors(containerColor = colorScheme.onBackground)
         ) {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(10.dp),
-                horizontalAlignment = Alignment.Start,
                 verticalArrangement = Arrangement.Top
             ) {
-                HeaderRow(onClose = {
-                    callback(false)
-                })
+                HeaderRow(onClose = { callback(false) })
                 InfoRow(labelRes = R.string.published_by, value = publishedBy)
                 InfoRow(labelRes = R.string.publication_date, value = date)
                 TagRow(chip)
@@ -71,15 +72,14 @@ fun ShowInfoPost(
 private fun HeaderRow(onClose: () -> Unit) {
     Row(
         modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.End,
+        horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
         TitleCardOdin(text = stringResource(id = R.string.post_information))
-        Spacer(modifier = Modifier.width(30.dp))
         IconButton(onClick = onClose) {
             Icon(
                 painter = painterResource(id = R.drawable.baseline_close_24),
-                contentDescription = null,
+                contentDescription = "Close",
                 tint = colorScheme.secondary
             )
         }
@@ -90,7 +90,6 @@ private fun HeaderRow(onClose: () -> Unit) {
 private fun InfoRow(@StringRes labelRes: Int, value: String) {
     Row(
         modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.Start,
         verticalAlignment = Alignment.CenterVertically
     ) {
         DescriptionOdin(text = "${stringResource(id = labelRes)}: $value")
@@ -102,14 +101,12 @@ private fun InfoRow(@StringRes labelRes: Int, value: String) {
 private fun TagRow(chip: @Composable () -> Unit) {
     Row(
         modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.Start,
         verticalAlignment = Alignment.CenterVertically
     ) {
         DescriptionOdin(text = "${stringResource(id = R.string.tags)}:")
         LazyRow(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.Start,
-            verticalAlignment = Alignment.CenterVertically
+            horizontalArrangement = Arrangement.Start
         ) {
             item { chip() }
         }
@@ -123,12 +120,14 @@ private fun ShowInfoPostPreview() {
         ShowInfoPost(
             callback = {},
             chip = {
-                Spacer(modifier = Modifier.padding(5.dp))
-                ChipTheme(title = "🎓Aprendizaje")
-                Spacer(modifier = Modifier.padding(5.dp))
-                ChipTheme(title = "✨IA")
-                Spacer(modifier = Modifier.padding(5.dp))
-                ChipTheme(title = "☕Java")
+                // Ejemplo de chips
+                Row {
+                    ChipTheme(title = "🎓Aprendizaje")
+                    Spacer(modifier = Modifier.width(5.dp))
+                    ChipTheme(title = "✨IA")
+                    Spacer(modifier = Modifier.width(5.dp))
+                    ChipTheme(title = "☕Java")
+                }
             }
         )
     }

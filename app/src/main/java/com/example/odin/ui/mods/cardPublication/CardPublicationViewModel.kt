@@ -1,18 +1,17 @@
 package com.example.odin.ui.mods.cardPublication
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import androidx.lifecycle.ViewModel
 import com.example.odin.utils.Constants
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 
+@SuppressLint("StaticFieldLeak")
 class CardPublicationViewModel(private val context: Context) : CardPublicationInterface, ViewModel() {
-
     data class UiState(
         val isLiked: Boolean = false,
         val isSheetOpen: Boolean = false,
@@ -22,7 +21,7 @@ class CardPublicationViewModel(private val context: Context) : CardPublicationIn
     val uiState: StateFlow<UiState> = _uiState.asStateFlow()
 
     override fun onClickCard() {
-
+        TODO("Not yet implemented")
     }
 
     override fun onClickLike() {

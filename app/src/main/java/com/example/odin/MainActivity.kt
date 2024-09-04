@@ -10,7 +10,6 @@ import androidx.compose.animation.slideOut
 import androidx.compose.foundation.background
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.unit.IntOffset
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
@@ -31,9 +30,8 @@ import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 
 class MainActivity : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        val client = HttpClient(CIO) {
+    private val client by lazy {
+        HttpClient(CIO) {
             followRedirects = false
             install(ContentNegotiation) {
                 json(Json {
@@ -43,18 +41,24 @@ class MainActivity : ComponentActivity() {
                 })
             }
         }
+    }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         installSplashScreen()
+
         setContent {
             OdinTheme {
                 val systemUiController = rememberSystemUiController()
                 val navController = rememberNavController()
                 val context = this
+
                 systemUiController.setSystemBarsColor(
-                    color = Color.Transparent,
-                    darkIcons = false
+                    color = colorScheme.background,
+                    darkIcons = colorScheme.background.luminance() > 0.5f
                 )
+
                 NavHost(
                     modifier = Modifier.background(colorScheme.background),
                     navController = navController,

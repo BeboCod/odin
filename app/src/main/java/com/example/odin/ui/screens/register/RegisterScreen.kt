@@ -1,5 +1,6 @@
 package com.example.odin.ui.screens.register
 
+import Show
 import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -11,9 +12,6 @@ import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -26,7 +24,6 @@ import androidx.navigation.compose.rememberNavController
 import com.example.odin.R
 import com.example.odin.ui.mods.ButtonOdin
 import com.example.odin.ui.mods.LogoOverride
-import com.example.odin.ui.mods.Show
 import com.example.odin.ui.mods.TextFieldCustom
 import com.example.odin.ui.mods.TextFieldPasswordCustom
 import com.example.odin.ui.mods.TitleOdin
@@ -142,8 +139,8 @@ private fun Footer(viewModel: RegisterViewModel, navController: NavController) {
         Show(
             containerColor = colorScheme.error,
             icon = R.drawable.baseline_warning_amber_24,
-            Title = stringResource(id = R.string.sign_failed),
-            MSG = stringResource(id = R.string.incorrect_register)
+            title = stringResource(id = R.string.sign_failed),
+            msg = stringResource(id = R.string.incorrect_register)
         ) {
             viewModel.onShowError()
         }

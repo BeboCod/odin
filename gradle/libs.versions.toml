@@ -1,6 +1,6 @@
 [versions]
 accompanistSystemuicontroller = "0.31.3-beta"
-agp = "8.5.1"
+agp = "8.5.2"
 coreSplashscreen = "1.0.1"
 datastorePreferences = "1.1.1"
 datastorePreferencesCore = "1.1.1"

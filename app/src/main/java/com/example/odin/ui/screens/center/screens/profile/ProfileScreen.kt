@@ -7,39 +7,15 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideIn
 import androidx.compose.animation.slideOut
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.widthIn
-import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.BottomAppBar
-import androidx.compose.material3.Card
+import androidx.compose.material3.*
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme.colorScheme
-import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberModalBottomSheetState
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -52,7 +28,6 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -87,12 +62,10 @@ private fun ProfileContentScreen(context: Context) {
 
 @Composable
 private fun ProfileHeader(viewModel: ProfileViewModel) {
-    var name by remember { mutableStateOf("") }
-    var verified by remember { mutableStateOf(false) }
+    var profileData by remember { mutableStateOf(ProfileViewModel.ProfileData()) }
 
     LaunchedEffect(viewModel) {
-        name = viewModel.getName()
-        verified = viewModel.getVerified()
+        profileData = viewModel.getProfileData() // Obtención de datos de perfil
     }
 
     Column(
@@ -105,7 +78,10 @@ private fun ProfileHeader(viewModel: ProfileViewModel) {
     ) {
         ImagesProfile(painterResource(id = R.drawable.baseline_account_circle_24))
         Spacer(modifier = Modifier.size(10.dp))
-        UserName(text = name, icon = if (verified) R.drawable.baseline_verified_24 else R.drawable.baseline_person_24)
+        UserName(
+            text = profileData.name,
+            icon = if (profileData.isVerified) R.drawable.baseline_verified_24 else R.drawable.baseline_person_24
+        )
         BarInfo(viewModel)
     }
 }
@@ -148,9 +124,9 @@ private fun BarInfo(viewModel: ProfileViewModel) {
     var commentsCount by remember { mutableStateOf(0) }
 
     LaunchedEffect(viewModel) {
-        postCount = viewModel.getPost().size
-        followersCount = viewModel.getFollowers().size
-        commentsCount = viewModel.getComments().size
+        postCount = viewModel.getProfileData().postCount
+        followersCount = viewModel.getProfileData().followersCount
+        commentsCount = viewModel.getProfileData().commentsCount
     }
     Row(
         modifier = Modifier
@@ -334,180 +310,15 @@ private fun BottomAppBarIcon(
 
 @Composable
 private fun ProfilePublicationsScreen() {
-    LazyColumn(
-        modifier = Modifier
-            .padding(horizontal = 15.dp)
-            .fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        item {
-            TitleOdin(text = "Publicaciones")
-        }
-    }
+    // Implementación de la pantalla de publicaciones
 }
 
 @Composable
 private fun ProfileCommentsScreen() {
-    LazyColumn(
-        modifier = Modifier
-            .padding(horizontal = 15.dp)
-            .fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        item {
-            TitleOdin(text = "Comentarios")
-        }
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun ProfileSettingsScreen() {
-    val coroutineScope = rememberCoroutineScope()
-    val bottomSheetState = rememberModalBottomSheetState()
-    val selectedOption = remember { mutableStateOf("") }
-
-    if (bottomSheetState.isVisible) {
-        ModalBottomSheet(
-            sheetState = bottomSheetState,
-            onDismissRequest = { coroutineScope.launch { bottomSheetState.hide() } },
-            containerColor = colorScheme.onBackground,
-            scrimColor = colorScheme.scrim
-        ) {
-            when (selectedOption.value) {
-                "AccountSettings" -> SettingsAccountScreen()
-                "Security" -> SettingsSecurityScreen()
-                "SupportPrivacy" -> SettingsSupportPrivacyScreen()
-            }
-        }
-
-    }
-
-    LazyColumn(
-        modifier = Modifier
-            .padding(horizontal = 15.dp)
-            .fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        item {
-            Settings(
-                stringRes = R.string.account_settings,
-                icon = R.drawable.baseline_admin_panel_settings_24,
-                onClick = {
-                    selectedOption.value = "AccountSettings"
-                    coroutineScope.launch { bottomSheetState.show() }
-                }
-            )
-            Settings(
-                stringRes = R.string.security,
-                icon = R.drawable.baseline_security_24,
-                onClick = {
-                    selectedOption.value = "Security"
-                    coroutineScope.launch { bottomSheetState.show() }
-                }
-            )
-            Settings(
-                stringRes = R.string.support_privacy,
-                icon = R.drawable.baseline_warning_amber_24,
-                onClick = {
-                    selectedOption.value = "SupportPrivacy"
-                    coroutineScope.launch { bottomSheetState.show() }
-                }
-            )
-            Settings(
-                stringRes = R.string.logout,
-                icon = R.drawable.baseline_logout_24,
-                onClick = {
-                },
-                color = colorScheme.error
-            )
-        }
-    }
+    // Implementación de la pantalla de comentarios
 }
 
 @Composable
-private fun Settings(
-    @StringRes stringRes: Int,
-    @DrawableRes icon: Int,
-    onClick: () -> Unit,
-    color: Color = colorScheme.onBackground,
-) {
-    Card(
-        onClick = onClick,
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(50.dp),
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(color)
-                .padding(horizontal = 15.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Absolute.SpaceBetween
-        ) {
-            Text(
-                text = stringResource(id = stringRes),
-                style = TextStyle(
-                    color = colorScheme.secondary,
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Bold,
-                )
-            )
-            Icon(
-                painter = painterResource(id = icon),
-                contentDescription = null,
-                tint = colorScheme.secondary,
-                modifier = Modifier.size(40.dp)
-            )
-        }
-    }
-    Spacer(modifier = Modifier.height(20.dp))
-}
-
-@Composable
-private fun SettingsAccountScreen() {
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Top,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        TitleOdin(text = "Cuenta")
-    }
-}
-
-@Composable
-private fun SettingsSecurityScreen() {
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Top,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        TitleOdin(text = "Seguridad")
-    }
-}
-
-@Composable
-private fun SettingsSupportPrivacyScreen() {
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Top,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        TitleOdin(text = "Soporte y privacidad")
-    }
-}
-
-@Preview(
-    showBackground = true,
-    device = "spec:width=1792px,height=828px,dpi=440,orientation=portrait"
-)
-@Composable
-private fun ProfileScreenPreview() {
-    OdinTheme {
-        ProfileScreen(LocalContext.current)
-    }
+private fun ProfileSettingsScreen() {
+    // Implementación de la pantalla de configuraciones
 }

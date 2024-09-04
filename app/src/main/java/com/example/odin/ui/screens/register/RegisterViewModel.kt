@@ -1,5 +1,6 @@
 package com.example.odin.ui.screens.register
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.widget.Toast
 import androidx.datastore.preferences.core.edit
@@ -8,13 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.odin.data.model.request.RegisterRequest
 import com.example.odin.data.model.response.RegisterResponse
 import com.example.odin.data.model.response.ValidationResponse
-import com.example.odin.preference.PREFERENCE_LIST_KEY.LIST_COMMENTS_KEY
-import com.example.odin.preference.PREFERENCE_LIST_KEY.LIST_FOLLOWERS_KEY
-import com.example.odin.preference.PREFERENCE_LIST_KEY.LIST_POSTS_KEY
-import com.example.odin.preference.PREFERENCE_STRING_KEY.BOOLEAN_VERIFICATION_KEY
-import com.example.odin.preference.PREFERENCE_STRING_KEY.STRING_ID_KEY
-import com.example.odin.preference.PREFERENCE_STRING_KEY.STRING_IMAGE_URL_KEY
-import com.example.odin.preference.PREFERENCE_STRING_KEY.STRING_NAME_KEY
+import com.example.odin.preference.KeysPreference
 import com.example.odin.utils.Constants
 import com.example.odin.utils.dataStore
 import io.ktor.client.HttpClient
@@ -31,8 +26,10 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class RegisterViewModel(private val context: Context, private val client: HttpClient) : ViewModel(),
-    RegisterInterface {
+class RegisterViewModel(
+    @field:SuppressLint("StaticFieldLeak") private val context: Context,
+    private val client: HttpClient
+) : ViewModel(), RegisterInterface {
     data class UiState(
         val username: String = "",
         val email: String = "",
@@ -108,59 +105,66 @@ class RegisterViewModel(private val context: Context, private val client: HttpCl
         val password = uiState.value.password
 
         if (validate())
-        viewModelScope.launch(Dispatchers.Main) {
-            try {
-                val response = client.post("${Constants.HTTPS_ODIN}/register") {
-                    contentType(ContentType.Application.Json)
-                    setBody(
-                        RegisterRequest(
-                            name = username.lowercase(),
-                            email = email.lowercase(),
-                            password = password.lowercase()
+            viewModelScope.launch(Dispatchers.Main) {
+                try {
+                    val response = client.post("${Constants.HTTPS_ODIN}/register") {
+                        contentType(ContentType.Application.Json)
+                        setBody(
+                            RegisterRequest(
+                                name = username.lowercase(),
+                                email = email.lowercase(),
+                                password = password.lowercase()
+                            )
+                        )
+                    }
+                    if (response.status == HttpStatusCode.Created) {
+                        val data = response.body<RegisterResponse>()
+                        context.dataStore.edit { preferences ->
+                            preferences[KeysPreference.PreferenceStringKey.STRING_ID_KEY.key] =
+                                data.uid
+                            preferences[KeysPreference.PreferenceStringKey.STRING_NAME_KEY.key] =
+                                username
+                            preferences[KeysPreference.PreferenceStringKey.STRING_IMAGE_URL_KEY.key] =
+                                ""
+                            preferences[KeysPreference.PreferenceStringKey.BOOLEAN_VERIFICATION_KEY.key] =
+                                "false"
+                            preferences[KeysPreference.PreferenceListKey.LIST_POSTS_KEY.key] =
+                                emptySet()
+                            preferences[KeysPreference.PreferenceListKey.LIST_FOLLOWERS_KEY.key] =
+                                emptySet()
+                            preferences[KeysPreference.PreferenceListKey.LIST_COMMENTS_KEY.key] =
+                                emptySet()
+                        }
+                        Toast.makeText(context, "Registro exitoso", Toast.LENGTH_SHORT).show()
+                        callback(ValidationResponse(isValid = true, data = "Registro exitoso"))
+                    } else {
+                        _uiState.update { it.copy(isShowingError = true) }
+                        callback(ValidationResponse(isValid = false, data = "Registro fallido"))
+                    }
+                } catch (e: ClientRequestException) {
+                    e.printStackTrace()
+                    _uiState.update { it.copy(isShowingError = true) }
+                    callback(
+                        ValidationResponse(
+                            isValid = false,
+                            data = "Registro fallido",
+                            errorMessage = e.message
                         )
                     )
-                }
-                if (response.status == HttpStatusCode.Created) {
-                    val data = response.body<RegisterResponse>()
-                    context.dataStore.edit { preferences ->
-                        preferences[STRING_ID_KEY.keys] = data.uid
-                        preferences[STRING_NAME_KEY.keys] = username
-                        preferences[STRING_IMAGE_URL_KEY.keys] = ""
-                        preferences[BOOLEAN_VERIFICATION_KEY.keys] = "false"
-                        preferences[LIST_POSTS_KEY.keys] = emptySet()
-                        preferences[LIST_FOLLOWERS_KEY.keys] = emptySet()
-                        preferences[LIST_COMMENTS_KEY.keys] = emptySet()
-                    }
-                    Toast.makeText(context, "Registro exitoso", Toast.LENGTH_SHORT).show()
-                    callback(ValidationResponse(isValid = true, data = "Registro exitoso"))
-                } else {
+                } catch (e: Exception) {
+                    e.printStackTrace()
                     _uiState.update { it.copy(isShowingError = true) }
-                    callback(ValidationResponse(isValid = false, data = "Registro fallido"))
+                    callback(
+                        ValidationResponse(
+                            isValid = false,
+                            data = "Registro fallido",
+                            errorMessage = e.message
+                        )
+                    )
+                } finally {
+                    client.close()
                 }
-            } catch (e: ClientRequestException) {
-                e.printStackTrace()
-                _uiState.update { it.copy(isShowingError = true) }
-                callback(
-                    ValidationResponse(
-                        isValid = false,
-                        data = "Registro fallido",
-                        errorMessage = e.message
-                    )
-                )
-            } catch (e: Exception) {
-                e.printStackTrace()
-                _uiState.update { it.copy(isShowingError = true) }
-                callback(
-                    ValidationResponse(
-                        isValid = false,
-                        data = "Registro fallido",
-                        errorMessage = e.message
-                    )
-                )
-            } finally {
-                client.close()
             }
-        }
         else
             callback(ValidationResponse(isValid = false, data = "Registro fallido"))
     }

@@ -1,8 +1,11 @@
-package com.example.odin.ui.screens.center.screens.tools.ToolsOdin.ControlMemory
+package com.example.odin.ui.screens.center.screens.tools.tools_odin.control_memory
 
+import androidx.annotation.DrawableRes
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -11,11 +14,13 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -37,6 +42,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -48,8 +54,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.example.odin.R
+import com.example.odin.ui.mods.DescriptionOdin
 import com.example.odin.ui.mods.TextFieldCustom
 import com.example.odin.ui.mods.TextFieldCustomIconButton
+import com.example.odin.ui.mods.TitleCardOdin
 import com.example.odin.ui.theme.OdinTheme
 
 @Composable
@@ -69,9 +77,7 @@ private fun Screen() {
         contentAlignment = Alignment.BottomEnd
     ) {
         FloatingActionButton(
-            onClick = {
-                helpButtonClicked.value = true
-            },
+            onClick = { helpButtonClicked.value = true },
             containerColor = colorScheme.primary,
             modifier = Modifier.padding(15.dp)
         ) {
@@ -82,7 +88,7 @@ private fun Screen() {
                 modifier = Modifier.size(30.dp),
             )
         }
-        if (helpButtonClicked.value){
+        if (helpButtonClicked.value) {
             HelpButton {
                 helpButtonClicked.value = it
             }
@@ -105,111 +111,38 @@ private fun HelpButton(onClick: (Boolean) -> Unit) {
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Text(
-                        text = stringResource(id = R.string.help),
-                        fontWeight = FontWeight.SemiBold,
-                        fontSize = 20.sp,
-                        color = colorScheme.secondary,
-                    )
+                    TitleCardOdin(text = stringResource(id = R.string.help))
                     Row(
                         horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.baseline_add_24),
-                            contentDescription = null,
-                            tint = colorScheme.secondary
-                        )
-                        Text(
-                            text = stringResource(id = R.string.add),
-                            fontWeight = FontWeight.SemiBold,
-                            fontSize = 20.sp,
-                            color = colorScheme.secondary,
-                        )
+                        Icon(id = R.drawable.baseline_add_24) {}
+                        DescriptionOdin(text = stringResource(id = R.string.add))
                     }
                     Row(
                         horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.baseline_remove_24),
-                            contentDescription = null,
-                            tint = colorScheme.secondary
-                        )
-                        Text(
-                            text = stringResource(id = R.string.delete),
-                            fontWeight = FontWeight.SemiBold,
-                            fontSize = 20.sp,
-                            color = colorScheme.secondary,
-                        )
+                        Icon(id = R.drawable.baseline_remove_24) {}
+                        DescriptionOdin(text = stringResource(id = R.string.delete))
                     }
                     Row(
                         horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier.fillMaxWidth(),
                     ) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.edit_24dp_e8eaed_fill0_wght400_grad0_opsz24),
-                            contentDescription = null,
-                            tint = colorScheme.secondary
-                        )
-                        Text(
-                            text = stringResource(id = R.string.modifier),
-                            fontWeight = FontWeight.SemiBold,
-                            fontSize = 20.sp,
-                            color = colorScheme.secondary,
-                        )
+                        Icon(id = R.drawable.edit_24dp_e8eaed_fill0_wght400_grad0_opsz24) {}
+                        DescriptionOdin(text = stringResource(id = R.string.modifier))
                     }
                     Row(
                         horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.baseline_delete_24),
-                            contentDescription = null,
-                            tint = colorScheme.secondary
-                        )
-                        Text(
-                            text = stringResource(id = R.string.clear),
-                            fontWeight = FontWeight.SemiBold,
-                            fontSize = 20.sp,
-                            color = colorScheme.secondary,
-                        )
-                    }
-                    Row(
-                        horizontalArrangement = Arrangement.Center,
-                        modifier = Modifier.fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Card(
-                            onClick = {
-                            },
-                            colors = CardDefaults.cardColors(
-                                containerColor = colorScheme.primary
-                            ),
-                            modifier = Modifier
-                                .size(50.dp)
-                                .padding(5.dp)
-                        ) {
-                            Box(
-                                modifier = Modifier.fillMaxSize(),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Text(
-                                    text = "Z",
-                                    style = TextStyle(
-                                        color = colorScheme.secondary,
-                                        fontWeight = FontWeight.Bold,
-                                        fontSize = 20.sp
-                                    ),
-                                )
-                            }
-                        }
-                        Text(
-                            text = stringResource(id = R.string.get),
-                            fontWeight = FontWeight.SemiBold,
-                            fontSize = 20.sp,
-                            color = colorScheme.secondary,
-                        )
+                        Icon(id = R.drawable.baseline_delete_24) {}
+                        DescriptionOdin(text = stringResource(id = R.string.clear))
                     }
                 }
             }
@@ -231,14 +164,26 @@ private fun ContentScreen(
             .padding(horizontal = 5.dp)
             .padding(bottom = 19.dp),
     ) {
-        Column(
+        LazyColumn(
             modifier = Modifier.wrapContentSize(),
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            ControlMemory(viewModel = viewModel, uiState)
-            ProgressBar(uiState)
-            Memory(viewModel = viewModel)
+            item {
+                ControlMemory(viewModel = viewModel, uiState)
+                ProgressBar(uiState)
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(600.dp)
+                        .padding(10.dp)
+                        .background(colorScheme.background),
+                    verticalArrangement = Arrangement.Bottom,
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                ) {
+                    Memory(viewModel = viewModel, uiState)
+                }
+            }
         }
     }
 }
@@ -321,11 +266,11 @@ private fun TextFieldsInputs(
         value = uiState.value.input,
         placeholderRes = R.string.input,
         keyboardType = KeyboardType.Text,
-        leadingIconRes = R.drawable.edit_24dp_e8eaed_fill0_wght400_grad0_opsz24
+        leadingIconRes = R.drawable.baseline_short_text_24
     ) {
         viewModel.onInputChanged(it)
     }
-    Spacer(modifier = Modifier.size(10.dp))
+    Spacer(modifier = Modifier.padding(5.dp))
     TextFieldCustom(
         value = uiState.value.inputCustom,
         placeholderRes = R.string.input_custom,
@@ -334,6 +279,15 @@ private fun TextFieldsInputs(
     ) {
         viewModel.onInputCustomChanged(it)
     }
+    Spacer(modifier = Modifier.padding(5.dp))
+    TextFieldCustom(
+        value = uiState.value.inputSearch,
+        placeholderRes = R.string.search,
+        keyboardType = KeyboardType.Text,
+        leadingIconRes = R.drawable.baseline_search_24
+    ) {
+        viewModel.onInputSearchChanged(it)
+    }
 }
 
 @Composable
@@ -341,133 +295,127 @@ private fun Control(
     viewModel: ControlMemoryViewModel,
     uiState: State<ControlMemoryViewModel.UiState>
 ) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceEvenly,
-        modifier = Modifier.fillMaxWidth()
+    Box(
+        modifier = Modifier
+            .clip(RoundedCornerShape(20.dp))
+            .background(
+                colorScheme.background
+            ),
+        contentAlignment = Alignment.Center,
     ) {
-        Box(
+        Row(
             modifier = Modifier
-                .clip(RoundedCornerShape(20.dp))
-                .background(
-                    colorScheme.background
-                ),
-            contentAlignment = Alignment.Center,
+                .wrapContentSize()
+                .padding(10.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center
         ) {
-            Row(
-                modifier = Modifier
-                    .wrapContentSize()
-                    .padding(10.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center
-            ) {
-                IconButton(onClick = { viewModel.add(uiState.value.input) }) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.baseline_add_24),
-                        contentDescription = null,
-                        modifier = Modifier.size(24.dp),
-                        tint = colorScheme.secondary
-                    )
-                }
-                IconButton(onClick = { viewModel.delete(uiState.value.input) }) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.baseline_remove_24),
-                        contentDescription = null,
-                        modifier = Modifier.size(24.dp),
-                        tint = colorScheme.secondary
-                    )
-                }
-                IconButton(onClick = {
-                    viewModel.replace(
-                        uiState.value.input, uiState.value.inputCustom
-                    )
-                }) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.edit_24dp_e8eaed_fill0_wght400_grad0_opsz24),
-                        contentDescription = null,
-                        modifier = Modifier.size(24.dp),
-                        tint = colorScheme.secondary
-                    )
-                }
-                IconButton(onClick = {
-                    viewModel.clear()
-                }) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.baseline_delete_24),
-                        contentDescription = null,
-                        modifier = Modifier.size(24.dp),
-                        tint = colorScheme.error
-                    )
-                }
+            Icon(id = R.drawable.baseline_add_circle_24) {
+                viewModel.add(uiState.value.input)
+            }
+            Icon(id = R.drawable.baseline_remove_circle_24) {
+                viewModel.delete(uiState.value.input)
+            }
+            Icon(id = R.drawable.edit_24dp_e8eaed_fill0_wght400_grad0_opsz24) {
+                viewModel.replace(uiState.value.input, uiState.value.inputCustom)
+            }
+            Icon(id = R.drawable.baseline_search_24) {
+                viewModel.get(uiState.value.inputSearch)
+            }
+            Icon(id = R.drawable.baseline_delete_24, color = colorScheme.error) {
+                viewModel.clear()
             }
         }
     }
 }
 
 @Composable
-private fun Memory(viewModel: ControlMemoryViewModel) {
+private fun Memory(
+    viewModel: ControlMemoryViewModel,
+    uiState: State<ControlMemoryViewModel.UiState>
+) {
     val matrix = viewModel.matrixState.collectAsState().value
     val numColumns = 4
     LazyVerticalGrid(
         columns = GridCells.Fixed(numColumns),
         modifier = Modifier
-            .wrapContentSize()
+            .fillMaxSize()
             .padding(10.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         items(matrix.size) { index ->
-            val cell = matrix[index]
-            ModulesMemory(pair = cell, viewModel)
+            val cell = matrix.values.elementAt(index)
+            val direction = matrix.keys.elementAt(index)
+
+            val backgroundColor = when {
+                uiState.value.marker.contains(direction.toString()) -> Color.Green
+                cell.first != ' ' -> colorScheme.primary
+                else -> colorScheme.onBackground
+            }
+
+            ModulesMemory(
+                pair = cell,
+                direction = direction,
+                viewModel = viewModel,
+                backgroundColor = backgroundColor
+            )
         }
     }
 }
 
+
 @Composable
-private fun ModulesMemory(pair: Pair<Char, String>, viewModel: ControlMemoryViewModel) {
+private fun ModulesMemory(
+    pair: Pair<Char, String>,
+    direction: Long,
+    viewModel: ControlMemoryViewModel,
+    activity: Boolean = true,
+    backgroundColor: Color = colorScheme.onBackground
+) {
     var onClick by remember { mutableStateOf(false) }
-    AnimatedVisibility(onClick && pair.first != ' ') {
+    AnimatedVisibility(
+        visible = onClick && pair.first != ' ' && activity,
+        enter = fadeIn(),
+        exit = fadeOut()
+    ) {
         Dialog(
             onDismissRequest = { onClick = false },
             content = {
                 Card(
                     colors = CardDefaults.cardColors(
-                        containerColor = colorScheme.primary
-                    ), modifier = Modifier.wrapContentSize()
+                        containerColor = colorScheme.background
+                    ),
+                    modifier = Modifier
+                        .wrapContentHeight()
+                        .fillMaxWidth()
                 ) {
                     Column(
-                        modifier = Modifier.padding(15.dp),
+                        modifier = Modifier
+                            .padding(15.dp)
+                            .fillMaxWidth(),
                         verticalArrangement = Arrangement.Center,
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Text(
-                            text = stringResource(id = R.string.info),
-                            fontWeight = FontWeight.SemiBold,
-                            fontSize = 20.sp,
-                            color = colorScheme.secondary,
-                        )
-                        Text(
-                            text = "Value: ${pair.first}",
-                            fontWeight = FontWeight.SemiBold,
-                            fontSize = 20.sp,
-                            color = colorScheme.secondary,
-                        )
-                        Text(
-                            text = "Id: ${pair.second}",
-                            fontWeight = FontWeight.SemiBold,
-                            fontSize = 20.sp,
-                            color = colorScheme.secondary,
-                        )
-                        IconButton(onClick = {
-                            onClick = false
-                            viewModel.clear()
-                        }) {
+                        TitleCardOdin(text = stringResource(id = R.string.info))
+                        DescriptionOdin(text = "Value: ${pair.first}")
+                        DescriptionOdin(text = "Id: ${pair.second}")
+                        DescriptionOdin(text = "Direction Memory: $direction")
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.Center,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Icon(id = R.drawable.baseline_delete_24, color = colorScheme.error) {
+                                onClick = false
+                                viewModel.deleteElement(pair.second.split("-")[0])
+                            }
                             Icon(
-                                painter = painterResource(id = R.drawable.baseline_delete_24),
-                                contentDescription = null,
-                                modifier = Modifier.size(24.dp),
-                                tint = colorScheme.error
-                            )
+                                id = R.drawable.baseline_content_copy_24,
+                                color = colorScheme.secondary
+                            ) {
+                                viewModel.copyToClipboard(direction.toString())
+                            }
                         }
                     }
                 }
@@ -478,7 +426,7 @@ private fun ModulesMemory(pair: Pair<Char, String>, viewModel: ControlMemoryView
         onClick = {
             onClick = true
         }, colors = CardDefaults.cardColors(
-            containerColor = if (pair.first == ' ') colorScheme.background else colorScheme.primary
+            containerColor = backgroundColor
         ), modifier = Modifier
             .size(50.dp)
             .padding(5.dp)
@@ -493,6 +441,18 @@ private fun ModulesMemory(pair: Pair<Char, String>, viewModel: ControlMemoryView
                 ),
             )
         }
+    }
+}
+
+@Composable
+private fun Icon(@DrawableRes id: Int, color: Color = colorScheme.secondary, onClick: () -> Unit) {
+    IconButton(onClick = onClick) {
+        Icon(
+            painter = painterResource(id = id),
+            contentDescription = null,
+            modifier = Modifier.size(24.dp),
+            tint = color
+        )
     }
 }
 

@@ -2,7 +2,6 @@ package com.example.odin.ui.mods
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
@@ -22,52 +21,58 @@ import androidx.compose.ui.unit.sp
 import com.example.odin.R
 import com.example.odin.ui.mods.cardPublication.CardPublicationViewModel
 
+
+/**
+ * Composable que muestra un chip temático dentro de una fila horizontal.
+ *
+ * @param title El título del chip que se mostrará.
+ * @param viewModel (Opcional) ViewModel para manejar acciones asociadas a los chips.
+ */
 @Composable
-fun ChipTheme(title: String, viewModel: CardPublicationViewModel) {
-    // Fila que contiene los InputChips
+fun ChipTheme(
+    title: String,
+    viewModel: CardPublicationViewModel? = null
+) {
     LazyRow(
         modifier = Modifier
-            .wrapContentWidth() // Ocupa todo el ancho disponible
-            .wrapContentHeight(), // Ajusta la altura al contenido
-        verticalAlignment = Alignment.CenterVertically, // Centra verticalmente los elementos
-        horizontalArrangement = Arrangement.Absolute.Right // Alinea los elementos a la derecha
+            .wrapContentWidth()
+            .wrapContentHeight(),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.End
     ) {
         item {
-            // Primer InputChip para comentarios
             InputChip(
-                selected = false, // No seleccionado por defecto
-                onClick = { viewModel.onClickComment() }, // Acción al hacer clic
+                selected = false,
+                onClick = { viewModel?.onClickComment() },
                 label = {
                     Text(
-                        text = stringResource(id = R.string.Want_help), // Texto del chip
-                        fontSize = 13.sp // Tamaño de fuente
+                        text = stringResource(id = R.string.Want_help),
+                        fontSize = 13.sp
                     )
                 },
                 leadingIcon = {
                     Icon(
-                        painter = painterResource(id = R.drawable.baseline_mode_comment_24), // Icono del chip
-                        contentDescription = null // Descripción del contenido
+                        painter = painterResource(id = R.drawable.baseline_mode_comment_24),
+                        contentDescription = null
                     )
                 },
                 colors = InputChipDefaults.inputChipColors(
-                    containerColor = colorScheme.background, // Color de fondo del chip
-                    labelColor = colorScheme.secondary, // Color del texto del chip
-                    leadingIconColor = colorScheme.secondary // Color del icono del chip
+                    containerColor = colorScheme.background,
+                    labelColor = colorScheme.secondary,
+                    leadingIconColor = colorScheme.secondary
                 )
             )
 
-            // Espacio entre los chips
             Spacer(modifier = Modifier.size(10.dp))
 
-            // Segundo InputChip para el tema
             InputChip(
-                selected = true, // Seleccionado por defecto
-                onClick = { viewModel.onClickChip() }, // Acción al hacer clic
-                label = { DescriptionOdin(text = title) }, // Descripción del chip
+                selected = true,
+                onClick = { viewModel?.onClickChip() ?: Unit },
+                label = { Text(text = title) },
                 colors = InputChipDefaults.inputChipColors(
-                    containerColor = colorScheme.primary, // Color de fondo del chip
-                    labelColor = colorScheme.secondary, // Color del texto del chip
-                    leadingIconColor = colorScheme.secondary // Color del icono del chip
+                    containerColor = colorScheme.primary,
+                    labelColor = colorScheme.secondary,
+                    leadingIconColor = colorScheme.secondary
                 )
             )
         }
@@ -78,8 +83,7 @@ fun ChipTheme(title: String, viewModel: CardPublicationViewModel) {
 fun ChipTheme(title: String) {
     InputChip(
         selected = true,
-        onClick = {
-        },
+        onClick = {},
         label = { Text(text = title) },
         colors = InputChipDefaults.inputChipColors(
             containerColor = colorScheme.primary,
